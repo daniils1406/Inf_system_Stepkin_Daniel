@@ -173,6 +173,7 @@
   </tr>
   </tbody>
 </table>
+<button onclick="location.href='/list'">Back to main</button>
 </body>
 </html>
 

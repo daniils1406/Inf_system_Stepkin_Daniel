@@ -23,5 +23,6 @@
 <p class="P">
     <img src="recources/forest-bears-shishkin8.jpg" width="350" height="350">
 </p>
+<button onclick="location.href='/list'">Back to main</button>
 </body>
 </html>
