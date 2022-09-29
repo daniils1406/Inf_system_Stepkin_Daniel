@@ -3,29 +3,42 @@ package app.support;
 import java.util.LinkedList;
 import java.util.List;
 
-
-
 public class Room {
-    String idOfRoom;
-    List<String> meseges=new LinkedList<>();
+    Integer login;
+    String password;
+    List<String> messages=new LinkedList<>();
 
-    public Room(String idOfRoom){
-        this.idOfRoom=idOfRoom;
+    public Room(Integer login){
+        this.login=login;
     }
 
-    public String getIdOfRoom() {
-        return idOfRoom;
+    public Integer getLogin(){return login;}
+    public String getPassword(){return password;}
+
+    public void setLogin(Integer login){
+        this.login=login;
     }
 
-    public List<String> getMeseges() {
-        return meseges;
+    public void setPassword(String password){
+        this.password=password;
     }
 
-    public void setMeseges(List<String> meseges) {
-        this.meseges = meseges;
+    public void add(String message){
+        messages.add(message);
     }
 
-    public void add(String messege){
-        meseges.add(messege);
+    public void setMessages(List<String> messages){
+        this.messages=messages;
+    }
+
+    public List<String> getMessages(){return messages;}
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", messages=" + messages +
+                '}';
     }
 }

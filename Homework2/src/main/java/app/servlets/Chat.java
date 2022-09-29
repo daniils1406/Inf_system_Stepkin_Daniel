@@ -1,6 +1,8 @@
 package app.servlets;
 
-import app.support.*;
+import app.support.Listener;
+import app.support.PostgresDBConnectionDataHolder;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,98 +12,93 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
-import static java.util.Objects.nonNull;
 
 @WebServlet("/chat")
 public class Chat extends HttpServlet {
-
-    List<User> users=new LinkedList<>();
-    static List<Room>  chats=new LinkedList<>();
-    boolean o=true;
-
-    public static List<Room> getChats() {
-        return chats;
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String e= (String) req.getSession().getAttribute("NameOfRoom");
-
-        Room r=new Room(e);
-        if(!chats.isEmpty()) {
-            for(int i=0;i< chats.size();i++){
-                if(chats.get(i).getIdOfRoom().equals(r.getIdOfRoom())){
-                    o=false;
-                }
-            }
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(PostgresDBConnectionDataHolder.URL, PostgresDBConnectionDataHolder.USERNAME, PostgresDBConnectionDataHolder.PASSWORD);
+        } catch (SQLException e) {
+            System.out.println("Опять бред!");
+            throw new RuntimeException(e);
         }
-        if (o){
-            chats.add(r);
+        String createTable = "create table if not exists mess" +
+                "(" +
+                "id bigserial primary key," +
+                "id_of_room INT," +
+                "message222 varchar" +
+                ");";
+
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(createTable);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        o=true;
-
-
-
-
-        req.setAttribute("nameOfRoom",e);
-
-        HttpSession session=req.getSession(true);
-
-        //users.add(new User(e,session.getId()));
-        boolean p=true;
-        int p1=0;
-        for(int i=0;i< users.size();i++){
-            if(users.get(i).getSession().equals(session.getId())){
-                p=false;
-                p1=i;
-            }
-        }
-        if(p){
-            users.add(new User(e,session.getId()));
-        }else{
-            users.get(p1).setId(e);
+        try {
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
 
-        String messege=req.getParameter("MessegeWindow");
-        if(nonNull(messege)){
-            session.setAttribute("messege",messege);
-            r.add(messege);
-        }
+        int e = Integer.parseInt((String) req.getSession().getAttribute("login"));
+
+        String m=req.getParameter("MessageWindow");
+
+        req.setAttribute("nameOfRoom", e);
+
+        HttpSession session = req.getSession();
+
+        Listener.addKey(e);
+        Listener.add(session.getId(), e);
 
 
-        List<String> w=new LinkedList<>();
-        if(!users.isEmpty()){
-            for(User s: users){
-                if(s.getId().equals(e)){
-                    w.add(s.getSession());
-                }
-            }
-            req.setAttribute("CurrentUsers", w);
-        }
-
-
-        if(messege!=null){
-            setEventListenersData(req);
+        if(m!=null){
+            session.setAttribute("messageFromMessageWindow", m);
+            session.removeAttribute("messageFromMessageWindow");
         }
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/chat.jsp");
         requestDispatcher.forward(req, resp);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+    public static void recordToDataBase(Map<Integer, List<String>> allSessionMessages, Connection connection, int e, HttpServletRequest req) {
+        Collection<Integer> rooms =  allSessionMessages.keySet();//получил id всех комнат
+        for (Integer num : rooms) {
+            if(num==e && num!=0){
+                List<String> messegesFromSomeRoom = allSessionMessages.get(num);
+                PreparedStatement statement = null;
+                String sqlInsert = "INSERT INTO mess(id_of_room, message222) VALUES(?,?)";
+                for (String message : messegesFromSomeRoom) {
+                    try {
+                        statement = connection.prepareStatement(sqlInsert);
+                        statement.setInt(1, num);
+                        statement.setString(2, message);
+                        statement.execute();
+                    } catch (SQLException ex) {
+                        System.out.println("Ошибка в наборе данных");
+                        throw new RuntimeException(ex);
 
-    }
-
-    private void setEventListenersData(HttpServletRequest request) {
-        String e= (String) request.getSession().getAttribute("NameOfRoom");
-        request.setAttribute("activeSessions", SessionCreatedListener.getTotalActiveSession());
-        request.setAttribute("sessioHistory", SessionAttributesChangedListener.getSessionHistory(users,chats,e,request.getSession()));
-
+                    }
+                }
+            }
+        }
+        for(Integer num: rooms){
+            if(num==e && num!=0){
+                allSessionMessages.put(num, new LinkedList<>());
+            }
+        }
     }
 }
