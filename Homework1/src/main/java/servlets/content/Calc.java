@@ -15,7 +15,7 @@ import java.io.IOException;
 import static java.util.Objects.nonNull;
 
 
-@ContentServlet(resourcePath = "/WEB-INF/views/Calculator.jsp", nameOfButton = "Калькулятор",discription = "Калькулятор для ваших подсчетов",picture = "recources/90819.png")
+@ContentServlet(resourcePath = "/WEB-INF/views/Calculator.jsp", nameOfButton = "Калькулятор",discription = "Калькулятор для ваших подсчетов",picture = "recources/calculator.png")
 @WebServlet("/calc")
 public class Calc extends HttpServlet {
 
