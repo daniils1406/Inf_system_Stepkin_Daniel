@@ -25,8 +25,6 @@ public class StartPage extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         req.getSession().setAttribute("NameOfUser",req.getParameter("NameOfUser"));
-//        RequestDispatcher requestDispatcher=req.getRequestDispatcher("/WEB-INF/views/index.jsp");
-//            requestDispatcher.forward(req,resp);
         resp.sendRedirect("/select");
 
     }

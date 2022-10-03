@@ -14,8 +14,6 @@ public class NameOfUserFilter extends HttpFilter {
     @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
 
-        //System.out.println(req.getParameter("NameOfUser"));
-        //System.out.println(req.getParameter("beforeLeave"));
         req.getSession().setAttribute("NameNotNull",req.getParameter("NameOfUser"));
         chain.doFilter(req,res);
     }

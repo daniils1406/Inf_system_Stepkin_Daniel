@@ -36,7 +36,6 @@ public class MainPage extends HttpServlet {
         if(req.getParameter("beforeLeave")!=null){
             Connection connection= PostgresConnectionProvider.getConnection();
             Chat.recordToDataBase(Listener.getAllSessionMessages(), connection,Integer.parseInt(req.getParameter("id")));
-            //req.getParameter("beforeLeave");
             Collection<String> u=Listener.getUserAndRoom().keySet();
             for(String t:u){
                 if(req.getSession().getId().equals(t)){
