@@ -5,13 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>untitled1</artifactId>
+    <artifactId>HW1</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <servlet.api.version>5.0.0</servlet.api.version>
+        <maven.war.plugin.version>3.3.2</maven.war.plugin.version>
     </properties>
 
     <dependencies>
@@ -30,17 +32,8 @@
             <artifactId>postgresql</artifactId>
             <version>42.5.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/wonder.ajax/Ajax -->
-        <!-- https://mavenlibs.com/maven/dependency/org.eclipse.jetty/jetty-util-ajax -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util-ajax</artifactId>
-            <version>11.0.12</version>
-        </dependency>
-
-
-
     </dependencies>
+
+
 
 </project>

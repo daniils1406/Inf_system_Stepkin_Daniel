@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 import java.io.IOException;
 
 
@@ -17,7 +16,8 @@ public class StartPage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher=req.getRequestDispatcher("index.jsp");
+
+        RequestDispatcher requestDispatcher=req.getRequestDispatcher("/WEB-INF/views/index.jsp");
         requestDispatcher.forward(req,resp);
     }
 
@@ -25,8 +25,9 @@ public class StartPage extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         req.getSession().setAttribute("NameOfUser",req.getParameter("NameOfUser"));
-        System.out.println(req.getParameter("Name"));
-        RequestDispatcher requestDispatcher=req.getRequestDispatcher("index.jsp");
-            requestDispatcher.forward(req,resp);
+//        RequestDispatcher requestDispatcher=req.getRequestDispatcher("/WEB-INF/views/index.jsp");
+//            requestDispatcher.forward(req,resp);
+        resp.sendRedirect("/select");
+
     }
 }

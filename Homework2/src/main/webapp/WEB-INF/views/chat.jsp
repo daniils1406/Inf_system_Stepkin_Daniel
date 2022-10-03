@@ -1,5 +1,3 @@
-<%@ page import="app.support.Room" %>
-<%@ page import="app.servlets.Chat" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.LinkedList" %>
 <%@ page import="java.sql.PreparedStatement" %>
@@ -7,8 +5,7 @@
 <%@ page import="app.support.PostgresConnectionProvider" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ page import="app.support.Listener" %>
-<%@ page import="java.util.Collection" %><%--
+<%@ page import="app.support.Listener" %><%--
   Created by IntelliJ IDEA.
   User: danii
   Date: 24.09.2022
@@ -45,28 +42,12 @@
         width: 50px;
         float: left;
     }
-    .time {
-        float: right;
-    }
     .you {
         background-color: #cccccc;
         border-radius: 5px;
         padding: 10px;
         margin: 10px 0;
 
-    }
-    .other {
-        background-color: #eeeeee;
-        border-color: #dddddd;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 10px 0;
-
-    }
-    .you:after, .other:after{
-        content: "";
-        clear: both;
-        display: table;
     }
     h2 {
         text-align: center;
@@ -87,21 +68,6 @@
     .button8:hover { background: rgba(255,255,255,.2); }
     .button8:active { background: white; }
 
-    .center-div
-    {
-        position: absolute;
-        margin: auto;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 500px;
-        height: 250px;
-        background-color: #ccc;
-        border: black;
-        border-radius: 10px;
-        border: 1px solid;
-    }
     h1{
         font-style: oblique;
         text-align: center;
@@ -124,24 +90,6 @@
         align-content: center;
         text-align: center;
     }
-    .b{
-        position: relative;
-        left: 50%;
-        transform: translate(-50%, 0);
-        display: inline-block;
-        color: black;
-        font-weight: 700;
-        text-decoration: none;
-        user-select: none;
-        padding: .5em 2em;
-        outline: none;
-        border: black;
-        border: 1px solid;
-        border-radius: 10px;
-        transition: 0.2s;
-    }
-    .b:hover { background: rgba(255,255,255,.2); }
-    .b:active { background: white; }
     form{
         text-align: center;
     }
@@ -161,25 +109,11 @@
 <div class="parent">
     <div class="container">
         <h1 style="text-align: center">Сообшения</h1>
-        <%Connection connection= PostgresConnectionProvider.getConnection();%>
-        <%List<String> p=new LinkedList<>();%>
-        <%String sql="SELECT message222 FROM mess where id_of_room= ?";%>
-        <%PreparedStatement statement=connection.prepareStatement(sql);%>
-        <%
-            try {
-                int q= (int) request.getAttribute("nameOfRoom");
-                statement.setInt(1,q);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        %>
-        <%ResultSet resultSet=statement.executeQuery();%>
-        <%while (resultSet.next()){%>
-        <%p.add(resultSet.getString("message222"));%>
-        <%}%>
+        <%List<String> p= (List<String>) request.getAttribute("MessagesFromDB");%>
+        <%if(!p.isEmpty()){%>
         <%for(int r=0;r<p.size();r++){%>
-
         <div class="you"><%=p.get(r)%></div>
+        <%}%>
         <%}%>
         <%List<String> u=Listener.getAllSessionMessages().get(request.getAttribute("nameOfRoom"));%>
         <%for(String f: u){%>
@@ -198,7 +132,7 @@
             Ваше сообщение
         </label>
         <input style="width: 235px; height: 30px; border-radius: 10px" type="text" name="MessageWindow">
-        <button class="button8" type="submit">Отпрваить</button>
+        <button class="button8" type="submit">Отправить</button>
         <button class="button8" onclick="location.href='/chat'">Обновить</button>
     </form>
 

@@ -1,8 +1,7 @@
 package app.servlets;
 
 import app.support.Listener;
-import app.support.PostgresDBConnectionDataHolder;
-
+import app.support.PostgresConnectionProvider;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,12 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 @WebServlet("/chat")
@@ -25,13 +26,7 @@ public class Chat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(PostgresDBConnectionDataHolder.URL, PostgresDBConnectionDataHolder.USERNAME, PostgresDBConnectionDataHolder.PASSWORD);
-        } catch (SQLException e) {
-            System.out.println("Опять бред!");
-            throw new RuntimeException(e);
-        }
+        Connection connection = PostgresConnectionProvider.getConnection();
         String createTable = "create table if not exists mess" +
                 "(" +
                 "id bigserial primary key," +
@@ -42,39 +37,57 @@ public class Chat extends HttpServlet {
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(createTable);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-
-        int e = Integer.parseInt((String) req.getSession().getAttribute("login"));
-
-        String m=req.getParameter("MessageWindow");
-
-        req.setAttribute("nameOfRoom", e);
-
-        HttpSession session = req.getSession();
-
-        Listener.addKey(e);
-        Listener.add(session.getId(), e);
+        if(req.getSession().getAttribute("NameNotNull")==null){
+            resp.sendRedirect("/");
+        } else if (req.getSession().getAttribute("login")==null || req.getSession().getAttribute("login")=="") {
+            resp.sendRedirect("/select");
+        }else{
 
 
-        if(m!=null){
-            session.setAttribute("messageFromMessageWindow", m);
-            session.removeAttribute("messageFromMessageWindow");
+            int e = Integer.parseInt((String) req.getSession().getAttribute("login"));
+
+            String m = req.getParameter("MessageWindow");
+
+            req.setAttribute("nameOfRoom", e);
+
+            HttpSession session = req.getSession();
+
+            Listener.addKey(e);
+            Listener.add(session.getId(), e);
+
+
+            if (m != null) {
+                session.setAttribute("messageFromMessageWindow", m);
+                session.removeAttribute("messageFromMessageWindow");
+            }
+            ResultSet resultSet;
+            List<String> p=new LinkedList<>();
+            connection= PostgresConnectionProvider.getConnection();
+            String sql="SELECT message222 FROM mess where id_of_room= ?";
+            try {
+                statement=connection.prepareStatement(sql);
+                int q= (int) req.getAttribute("nameOfRoom");
+                statement.setInt(1,q);
+                resultSet=statement.executeQuery(); while (resultSet.next()){
+                    p.add(resultSet.getString("message222"));
+                }
+            } catch (SQLException e1) {
+                throw new RuntimeException(e1);
+            }
+            req.setAttribute("MessagesFromDB",p);
+
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/WEB-INF/views/chat.jsp");
+            requestDispatcher.forward(req, resp);
         }
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/chat.jsp");
-        requestDispatcher.forward(req, resp);
     }
 
 
-    public static void recordToDataBase(Map<Integer, List<String>> allSessionMessages, Connection connection, int e, HttpServletRequest req) {
+    public static void recordToDataBase(Map<Integer, List<String>> allSessionMessages, Connection connection, int e) {
         Collection<Integer> rooms =  allSessionMessages.keySet();//получил id всех комнат
         for (Integer num : rooms) {
             if(num==e && num!=0){
@@ -88,7 +101,6 @@ public class Chat extends HttpServlet {
                         statement.setString(2, message);
                         statement.execute();
                     } catch (SQLException ex) {
-                        System.out.println("Ошибка в наборе данных");
                         throw new RuntimeException(ex);
 
                     }

@@ -65,24 +65,7 @@
     align-content: center;
     text-align: center;
   }
-  .b{
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-    display: inline-block;
-    color: black;
-    font-weight: 700;
-    text-decoration: none;
-    user-select: none;
-    padding: .5em 2em;
-    outline: none;
-    border: black;
-    border: 1px solid;
-    border-radius: 10px;
-    transition: 0.2s;
-  }
-  .b:hover { background: rgba(255,255,255,.2); }
-  .b:active { background: white; }
+
   form{
     text-align: center;
   }
@@ -99,9 +82,8 @@ background-image: url("image/1.png");
         Введите ваш ник
         <input style="width: 235px; height: 30px; border-radius: 10px"  type="text" name="NameOfUser">
       </label>
-      <button class="button8" type="submit">Ввести</button>
+      <button class="button8" type="submit">Выбрать чат</button>
     </form>
-    <button class="b" onclick="location.href='/select'">Выбрать чат</button>
   </div>
 
 </div>

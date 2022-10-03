@@ -4,7 +4,6 @@ import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionBindingEvent;
 
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,7 +39,7 @@ public class Listener implements HttpSessionAttributeListener {
     public void attributeAdded(HttpSessionBindingEvent event) {
         Collection<String> listOfUsers=  UserAndRoom.keySet();
         for(String user: listOfUsers){
-            if(user.equals(event.getSession().getId()) && event.getName()!="login" && event.getName()!="NameOfUser"){
+            if(user.equals(event.getSession().getId()) && event.getName()!="login" && event.getName()!="NameOfUser" && event.getName()!="NameNotNull" && event.getName()!="ExitButton"){
                 Integer y=UserAndRoom.get(event.getSession().getId());//ПОЛУЧИЛИ АЙДИ КОМНАТЫ В КОТОРУЮ СЛЕДУЕТ ДОБАВИТЬ СООБЩЕНИЕ
                 if(!event.getValue().equals("")){
                     allSessionMessages.get(y).add(event.getSession().getAttribute("NameOfUser")+": "+(String) event.getValue());//ДОБАВИЛИ СООБЩЕНИЕ В НУЖУЮ КОМНАТУ
