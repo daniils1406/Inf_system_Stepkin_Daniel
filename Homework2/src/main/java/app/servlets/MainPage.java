@@ -19,12 +19,13 @@ public class MainPage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        if(req.getSession().getAttribute("NameOfUser")==null ||req.getSession().getAttribute("NameOfUser")=="" || req.getSession().getAttribute("NameNotNull")==null){
-            resp.sendRedirect("/");
-        }else{
+        if (req.getSession().getAttribute("ExitButton")!=null &&(Integer)req.getSession().getAttribute("ExitButton")==1 && req.getSession().getAttribute("login")!=null && req.getSession().getAttribute("login")!=""){
+            resp.sendRedirect("/chat");
+        }else if(req.getSession().getAttribute("NameOfUser")!="" && req.getSession().getAttribute("NameOfUser")!=null){
             RequestDispatcher requestDispatcher=req.getRequestDispatcher("/WEB-INF/views/selectChat.jsp");
             requestDispatcher.forward(req,resp);
+        }else{
+            resp.sendRedirect("/");
         }
     }
 
@@ -34,8 +35,10 @@ public class MainPage extends HttpServlet {
         String login=req.getParameter("login");
         req.getSession().setAttribute("login", login);
         if(req.getParameter("beforeLeave")!=null){
+            req.getSession().setAttribute("ExitButton",null);
             Connection connection= PostgresConnectionProvider.getConnection();
             Chat.recordToDataBase(Listener.getAllSessionMessages(), connection,Integer.parseInt(req.getParameter("id")));
+            //req.getParameter("beforeLeave");
             Collection<String> u=Listener.getUserAndRoom().keySet();
             for(String t:u){
                 if(req.getSession().getId().equals(t)){
@@ -43,7 +46,6 @@ public class MainPage extends HttpServlet {
                 }
             }
         }
-
 
         RequestDispatcher requestDispatcher=req.getRequestDispatcher("/WEB-INF/views/selectChat.jsp");
         requestDispatcher.forward(req,resp);

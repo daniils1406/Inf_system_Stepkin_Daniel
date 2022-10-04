@@ -11,10 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,17 +31,17 @@ public class Chat extends HttpServlet {
                 "message222 varchar" +
                 ");";
 
-        PreparedStatement statement = null;
+        Statement statement = null;
         try {
-            statement = connection.prepareStatement(createTable);
-            statement.execute();
+//            statement = connection.prepareStatement(createTable);
+            statement=connection.createStatement();
+            statement.execute(createTable);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        if(req.getSession().getAttribute("NameNotNull")==null){
-            resp.sendRedirect("/");
-        } else if (req.getSession().getAttribute("login")==null || req.getSession().getAttribute("login")=="") {
+        if (req.getSession().getAttribute("login")==null || req.getSession().getAttribute("login")=="") {
+
             resp.sendRedirect("/select");
         }else{
 
@@ -67,13 +64,14 @@ public class Chat extends HttpServlet {
             }
             ResultSet resultSet;
             List<String> p=new LinkedList<>();
-            connection= PostgresConnectionProvider.getConnection();
             String sql="SELECT message222 FROM mess where id_of_room= ?";
             try {
-                statement=connection.prepareStatement(sql);
+                PreparedStatement statement1= connection.prepareStatement(sql);
+                statement1=connection.prepareStatement(sql);
                 int q= (int) req.getAttribute("nameOfRoom");
-                statement.setInt(1,q);
-                resultSet=statement.executeQuery(); while (resultSet.next()){
+                statement1.setInt(1,q);
+                resultSet=statement1.executeQuery();
+                while (resultSet.next()){
                     p.add(resultSet.getString("message222"));
                 }
             } catch (SQLException e1) {
