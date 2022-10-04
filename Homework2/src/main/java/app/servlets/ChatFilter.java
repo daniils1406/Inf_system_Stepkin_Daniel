@@ -16,10 +16,10 @@ public class ChatFilter extends HttpFilter {
 
         if(req.getParameter("beforeLeave")!=null){
             req.getSession().setAttribute("ExitButton",req.getParameter("beforeLeave"));
-//            System.out.println("0");
+
         }else{
             req.getSession().setAttribute("ExitButton",1);
-//            System.out.println("1");
+
         }
         chain.doFilter(req,res);
 
