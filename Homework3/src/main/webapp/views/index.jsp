@@ -20,10 +20,16 @@
     <title>$Title$</title>
   </head>
   <body>
-  <h1>АНОНИМНАЯ БАЗА ДАННЫХ АНОНИМНЫХ СОТРУДНИКОВ НЕКОТОРОЙ АНОНИМНОЙ КОМПАНИИ</h1>
+  <style>
+    div{
+      position: absolute;
+      top: 200px;
+    }
+  </style>
+  <h1>База данных сотрудников некоторой компании</h1>
   <%List<List<String>> p= (List<List<String>>) request.getAttribute("outList");%>
   <%if(p!=null && !p.isEmpty()){%>
-  <table border="2">
+  <table border="2" style="margin-right: 50px; float: left">
     <tr>
       <%List<String> c=(List<String>) request.getAttribute("ColumnsOfLinkTable");%>
       <%for(int i=0;i<c.size();i++){%>
@@ -39,12 +45,11 @@
   <%}%>
   </table>
   <%}%>
-
   <%List<Employee> e= (List<Employee>) request.getAttribute("employees");%>
   <form method="get">
     <input type="hidden" name="Delete" value="Delete">
   <%if(e!=null && !e.isEmpty()){%>
-  <table border="2">
+  <table border="2" style=" margin-right: 50px;float: left">
     <tr>
       <%List<String> c=(List<String>) request.getAttribute("ColumnsOfEmployeeTable");%>
       <th></th>
@@ -69,7 +74,7 @@
   <%List<Position> t= (List<Position>) request.getAttribute("positions");%>
   <%if(t!=null && !t.isEmpty()){%>
 
-  <table border="2">
+  <table border="2" style="float: left">
     <tr>
       <%List<String> c=(List<String>) request.getAttribute("ColumnsOfPositionTable");%>
       <th></th>
@@ -87,20 +92,20 @@
     <%}%>
   </table>
   <%}%>
-    <button type="submit">Удалить</button>
+    <button type="submit" style="position: absolute; top: 100px; left: 1400px">Удалить выделенные сущности</button>
   </form>
-
+<div>
   <form method="get">
     <h4>Упорядочить сотрудников</h4>
     <label>
       Укажите столбец
       <input type="text" name="column">
-    </label>
+    </label><br>
     <label>
       Укажите порядок "DESC ASC"
       <input type="text" name="ascendingOrDescending">
-    </label>
-    <button type="submit">Упорядочить </button>
+    </label><br>
+    <button type="submit">Упорядочить</button>
   </form>
 
 
@@ -109,13 +114,14 @@
     <label>
       Укажите столбец
       <input type="text" name="column1">
-    </label>
+    </label><br>
     <label>
-      Укажите порядок
+      Укажите порядок "DESC ASC"
       <input type="text" name="ascendingOrDescending1">
-    </label>
-    <button type="submit">Упорядочить по возрастанию ID рабочих мест</button>
+    </label><br>
+    <button type="submit">Упорядочить</button>
   </form>
   <button onclick="location.href='/change'">Создать запись или  отредактировать существуюшую</button>
+</div>
   </body>
 </html>

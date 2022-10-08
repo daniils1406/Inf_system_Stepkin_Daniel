@@ -18,9 +18,17 @@
     <title>Title</title>
 </head>
 <body>
+<style>
+    div{
+        float: left;
+        width: 300px;
+        height: 300px;
+    }
+</style>
+<div>
 <form method="get">
     <input type="hidden" value="CreateEmployee" name="CreateNewEmployee">
-    <button type="submit">Добавить нового сторудника</button>
+    <button style="float: left" type="submit">Добавить нового сторудника</button>
 </form>
 
 <%if(request.getAttribute("CreateNewEmployee")!=null && request.getSession().getAttribute("ColumnsOfTable")!=null){%>
@@ -28,23 +36,26 @@
     <%List<String> y= (List<String>) request.getSession().getAttribute("ColumnsOfTable");%>
     <%for(int i=0;i< y.size();i++){%>
     <%if(i!=0){%>
+    <br>
     <label>
         <%=y.get(i)%>
         <input type="text" name="value<%=i%>">
-    </label>
+    </label><br>
     <%}%>
     <%}%>
     <label>
         Введите id желаемых позииций
         <input type="text" name="idOfPosition">
-    </label>
+    </label><br>
     <button type="submit">Внести нового сотрудника</button>
 </form>
 <%}%>
+</div>
 
+<div>
 <form method="get">
     <input type="hidden" value="CreatePosition" name="CreateNewPosition">
-    <button type="submit">Добавить новую позицию</button>
+    <button style="float: left" type="submit">Добавить новое рабочее место</button>
 </form>
 
 
@@ -54,20 +65,23 @@
     <%List<String> y= (List<String>) request.getSession().getAttribute("ColumnsOfTable");%>
     <%for(int i=0;i< y.size();i++){%>
     <%if(i!=0){%>
+    <br>
     <label>
         <%=y.get(i)%>
         <input type="text" name="value1<%=i%>">
-    </label>
+    </label><br>
     <%}%>
     <%}%>
     <label>
         Введите id желаемых сотрудников
         <input type="text" name="idOfEmployee">
-    </label>
-    <button type="submit">Внести новую позицию</button>
+    </label><br>
+    <button style="float: left" type="submit">Внести новую позицию</button>
 </form>
 <%}%>
+</div>
 
+<div>
 <form method="get">
     <input type="hidden" value="UpdateEmployee" name="UpdateEmployee">
     <button type="submit">Изменить данные сторудника</button>
@@ -80,12 +94,15 @@
     <label>
         <%=y.get(i)%>
         <input type="text" name="valueForUpdate<%=i%>">
-    </label>
+    </label><br>
     <%}%>
-    <button type="submit">Внести нового сотрудника</button>
+    <button style="float: left" type="submit">Внести нового сотрудника</button>
 </form>
 <%}%>
+</div>
 
+
+<div>
 <form method="get">
     <input type="hidden" value="UpdatePosition" name="UpdatePosition">
     <button type="submit">Изменить данные раюочего места</button>
@@ -98,15 +115,18 @@
     <label>
         <%=y.get(i)%>
         <input type="text" name="valueForUpdate1<%=i%>">
-    </label>
+    </label><br>
     <%}%>
-    <button type="submit">Внести новое рабочее место</button>
+    <button style="float: left" type="submit">Внести новое рабочее место</button>
 </form>
 <%}%>
 
+</div>
+
+<div>
 <form method="get">
     <input type="hidden" value="CreateLink" name="CreateLink">
-    <button type="submit">Назначить сотрудника на должность</button>
+    <button style="float: left" type="submit">Назначить сотрудника на должность</button>
 </form>
 <%if(request.getAttribute("CreateLink")!=null && request.getSession().getAttribute("ColumnsOfTable")!=null){%>
 <form method="post">
@@ -116,15 +136,15 @@
     <label>
         <%=y.get(i)%>
         <input type="text" name="valueForCreateLink<%=i%>">
-    </label>
+    </label><br>
     <%}%>
     <%}%>
-    <button type="submit">Назначить сотрудника</button>
+    <button style="float: left" type="submit">Назначить сотрудника</button>
 </form>
 <%}%>
+</div>
 
-
-
+<div>
 <form method="get">
     <input type="hidden" value="DeleteLink" name="DeleteLink">
     <button type="submit">Снять сотрудника с должности</button>
@@ -137,13 +157,18 @@
     <label>
         <%=y.get(i)%>
         <input type="text" name="valueForDeleteLink<%=i%>">
-    </label>
+    </label><br>
     <%}%>
     <%}%>
-    <button type="submit">Снять сотрудника</button>
+    <button style="float: left" type="submit">Снять сотрудника</button>
 </form>
 <%}%>
+</div>
+
 
 <button onclick="location.href='..'">Вернутся</button>
+<%if(request.getAttribute("Error")!=null){%>
+<h2>Пожалуйста, заполните все поля!</h2>
+<%}%>
 </body>
 </html>

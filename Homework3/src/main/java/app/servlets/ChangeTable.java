@@ -70,6 +70,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("value"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -115,6 +116,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("value1"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -156,6 +158,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForUpdate"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -182,6 +185,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForUpdate1"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -205,6 +209,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForCreateLink"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -227,6 +232,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForDeleteLink"+i+""));
                 }else{
                     allIsInsert=false;
+                    req.setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
