@@ -19,7 +19,7 @@
   </style>
 </head>
 <body>
-<p class="P"><img class="P" src="recources/593.jpg" height="200px" width="140px" ></p>
+<p class="P"><img class="P" src="recources/pictEsenin.jpg" height="200px" width="140px" ></p>
 <button onclick="location.href='/list'">Back to main</button>
   <h2 style="text-align: center">Я иду долиной. На затылке кепи,<br>
   В лайковой перчатке смуглая рука.<br>

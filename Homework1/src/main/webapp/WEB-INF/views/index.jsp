@@ -12,7 +12,7 @@
 
 <div>       <!-- content -->
   <div>    <!-- buttons holder -->
-    <input onclick="location.href='/list'" type="image" src="/recources/p.png" width="50" height="50" >
+    <input onclick="location.href='/list'" type="image" src="/recources/start.png" width="50" height="50" >
   </div>
 </div>
 </body>

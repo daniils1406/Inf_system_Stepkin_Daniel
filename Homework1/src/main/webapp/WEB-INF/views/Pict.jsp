@@ -21,7 +21,7 @@
 <body>
 <h2 class="P">Утро в сосновом лесу</h2>
 <p class="P">
-    <img src="recources/forest-bears-shishkin8.jpg" width="350" height="350">
+    <img src="recources/bears.jpg" width="350" height="350">
 </p>
 <button onclick="location.href='/list'">Back to main</button>
 </body>
