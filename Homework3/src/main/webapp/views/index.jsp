@@ -6,7 +6,7 @@
 <%@ page import="app.entities.Employee" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.LinkedList" %>
-<%--<%@ taglib prefix="c" uri="jakarta.tags.core" %>--%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page import="app.entities.Position" %><%--
   Created by IntelliJ IDEA.
   User: danii
@@ -22,78 +22,89 @@
   <body>
   <style>
     div{
-      position: absolute;
-      top: 200px;
+      position: static;
+      width: 400px;
+      height: 400px;
     }
   </style>
   <h1>База данных сотрудников некоторой компании</h1>
-  <%List<List<String>> p= (List<List<String>>) request.getAttribute("outList");%>
-  <%if(p!=null && !p.isEmpty()){%>
-  <table border="2" style="margin-right: 50px; float: left">
-    <tr>
-      <%List<String> c=(List<String>) request.getAttribute("ColumnsOfLinkTable");%>
-      <%for(int i=0;i<c.size();i++){%>
-      <th><%=c.get(i)%></th>
-      <%}%>
-    </tr>
-    <%for(int i=0;i<p.size();i++){%>
-    <tr>
-    <%for(int j=0;j<p.get(i).size();j++){%>
-    <td><%=p.get(i).get(j)%></td>
-    <%}%>
-    </tr>
-  <%}%>
-  </table>
-  <%}%>
-  <%List<Employee> e= (List<Employee>) request.getAttribute("employees");%>
+  <c:set var="p" value="${requestScope.outList}"/>
+  <c:choose>
+    <c:when test="${p!=null}">
+      <table border="2" style="margin-right: 100px; margin-bottom: 30px; float: left">
+        <tr>
+          <c:set var="c" value="${requestScope.ColumnsOfLinkTable}"/>
+          <c:forEach var="i" items="${c}">
+          <th> <c:out value="${i}"/></th>
+          </c:forEach>
+        </tr>
+        <c:forEach var="i" items="${p}">
+          <tr>
+            <c:forEach var="i1" items="${i}">
+            <td><c:out value="${i1}"/></td>
+            </c:forEach>
+          </tr>
+        </c:forEach>
+      </table>
+    </c:when>
+  </c:choose>
+
+
+  <c:set var="e" value="${requestScope.employees}"/>
   <form method="get">
     <input type="hidden" name="Delete" value="Delete">
-  <%if(e!=null && !e.isEmpty()){%>
-  <table border="2" style=" margin-right: 50px;float: left">
+    <c:choose>
+      <c:when test="${e!=null}">
+  <table border="2" style=" margin-right: 70px; margin-bottom: 30px; float: left">
     <tr>
-      <%List<String> c=(List<String>) request.getAttribute("ColumnsOfEmployeeTable");%>
+      <c:set var="c" value="${requestScope.ColumnsOfEmployeeTable}"/>
       <th></th>
-      <%for(int i=0;i<c.size();i++){%>
-      <th><%=c.get(i)%></th>
-      <%}%>
+      <c:forEach var="i" items="${c}">
+        <th><c:out value="${i}"/></th>
+      </c:forEach>
     </tr>
-    <%for(int i=0;i<e.size();i++){%>
-    <tr>
-      <td><input type="checkbox" name="emp<%=e.get(i).getId()%>" value="<%=e.get(i).getId()%>"></td>
-      <td><%=e.get(i).getId()%></td>
-      <td><%=e.get(i).getFirstName()%></td>
-      <td><%=e.get(i).getLast_name()%></td>
-      <td><%=e.get(i).getBirthday()%></td>
-      <td><%=e.get(i).getGender()%></td>
-      <td><%=e.get(i).getEducation()%></td>
-    </tr>
-    <%}%>
+    <c:forEach var="i" items="${e}">
+      <tr>
+        <td><input type="checkbox" name="emp${i.id}" value="${i.id}"></td>
+        <td><c:out value="${i.id}"/></td>
+        <td><c:out value="${i.firstName}"/></td>
+        <td><c:out value="${i.last_name}"/></td>
+        <td><c:out value="${i.birthday}"/></td>
+        <td><c:out value="${i.gender}"/></td>
+        <td><c:out value="${i.education}"/></td>
+      </tr>
+    </c:forEach>
   </table>
-  <%}%>
+      </c:when>
+    </c:choose>
 
-  <%List<Position> t= (List<Position>) request.getAttribute("positions");%>
-  <%if(t!=null && !t.isEmpty()){%>
+    <c:set var="t" value="${requestScope.positions}"/>
+    <c:choose>
+      <c:when test="${t!=null}">
 
-  <table border="2" style="float: left">
+
+  <table border="2" style="float: left; margin-right: 70px; margin-bottom: 30px;">
     <tr>
-      <%List<String> c=(List<String>) request.getAttribute("ColumnsOfPositionTable");%>
+      <c:set var="c" value="${requestScope.ColumnsOfPositionTable}"/>
       <th></th>
-      <%for(int i=0;i<c.size();i++){%>
-      <th><%=c.get(i)%></th>
-      <%}%>
+      <c:forEach var="i" items="${c}">
+        <th><c:out value="${i}"></c:out></th>
+      </c:forEach>
     </tr>
-    <%for(int i=0;i<t.size();i++){%>
-    <tr>
-      <td><input type="checkbox" name="pos<%=t.get(i).getId()%>" value="<%=t.get(i).getId()%>"></td>
-      <td><%=t.get(i).getId()%></td>
-      <td><%=t.get(i).getActivity()%></td>
-      <td><%=t.get(i).getSpecialization()%></td>
-    </tr>
-    <%}%>
+    <c:forEach var="i" items="${t}">
+      <tr>
+        <td><input type="checkbox" name="pos${i.id}" value="${i.id}"></td>
+        <td><c:out value="${i.id}"/></td>
+        <td><c:out value="${i.activity}"/></td>
+        <td><c:out value="${i.specialization}"/></td>
+      </tr>
+    </c:forEach>
   </table>
-  <%}%>
-    <button type="submit" style="position: absolute; top: 100px; left: 1400px">Удалить выделенные сущности</button>
+      </c:when>
+    </c:choose>
+    <button type="submit" style="float: left;">Удалить выделенные сущности</button>
   </form>
+
 <div>
   <form method="get">
     <h4>Упорядочить сотрудников</h4>
