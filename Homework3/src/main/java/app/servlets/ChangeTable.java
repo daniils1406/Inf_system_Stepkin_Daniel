@@ -1,7 +1,6 @@
 package app.servlets;
 
 import app.DataBaseConnection.PostgresConnectionToDataBase;
-import app.entities.ColumnAndType;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,14 +52,15 @@ public class ChangeTable extends HttpServlet {
         }
 
 
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/CreateOrChange.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/views/CreateOrChange.jsp");
         requestDispatcher.forward(req, resp);
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<ColumnAndType> r= (List<ColumnAndType>) req.getSession().getAttribute("ColumnsOfTable");
+        req.getSession().setAttribute("Error",true);
+        List<String> r= (List<String>) req.getSession().getAttribute("ColumnsOfTable");
         List<String> w=new LinkedList<>();
         Connection connection=PostgresConnectionToDataBase.getConnection();
         boolean allIsInsert=true;
@@ -70,7 +70,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("value"+i+""));
                 }else{
                     allIsInsert=false;
-                    req.setAttribute("Error",allIsInsert);
+                    req.getSession().setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -116,7 +116,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("value1"+i+""));
                 }else{
                     allIsInsert=false;
-                    req.setAttribute("Error",allIsInsert);
+                    req.getSession().setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -158,7 +158,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForUpdate"+i+""));
                 }else{
                     allIsInsert=false;
-                    req.setAttribute("Error",allIsInsert);
+                    req.getSession().setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -185,7 +185,7 @@ public class ChangeTable extends HttpServlet {
                     w.add(req.getParameter("valueForUpdate1"+i+""));
                 }else{
                     allIsInsert=false;
-                    req.setAttribute("Error",allIsInsert);
+                    req.getSession().setAttribute("Error",allIsInsert);
                 }
             }
             if(allIsInsert){
@@ -249,8 +249,8 @@ public class ChangeTable extends HttpServlet {
 
         }
 
-
-        RequestDispatcher requestDispatcher=req.getRequestDispatcher("views/CreateOrChange.jsp");
-        requestDispatcher.forward(req,resp);
+        resp.sendRedirect("/change");
+//        RequestDispatcher requestDispatcher=req.getRequestDispatcher("WEB-INF/views/CreateOrChange.jsp");
+//        requestDispatcher.forward(req,resp);
     }
 }

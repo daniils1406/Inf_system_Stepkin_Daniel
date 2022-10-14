@@ -1,13 +1,5 @@
-<%@ page import="java.sql.Connection" %>
-<%@ page import="app.DataBaseConnection.PostgresConnectionToDataBase" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="app.entities.Employee" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ page import="app.entities.Position" %><%--
+
+<%@ taglib prefix="c" uri="jakarta.tags.core" %><%--
   Created by IntelliJ IDEA.
   User: danii
   Date: 01.10.2022
@@ -20,6 +12,7 @@
     <title>$Title$</title>
   </head>
   <body>
+  <script type="text/javascript" src="/js/jquery-3.6.1.min.js"></script>
   <style>
     div{
       position: static;
@@ -108,30 +101,54 @@
 <div>
   <form method="get">
     <h4>Упорядочить сотрудников</h4>
-    <label>
-      Укажите столбец
-      <input type="text" name="column">
-    </label><br>
-    <label>
-      Укажите порядок "DESC ASC"
-      <input type="text" name="ascendingOrDescending">
-    </label><br>
+    <h5>По столбцу</h5>
+    <input type="text" name="column" list="columnOfEmp" />
+    <datalist id="columnOfEmp">
+      <option value="id">id</option>
+      <option value="first_name">first_name</option>
+      <option value="last_name">last_name</option>
+      <option value="birthday">birthday</option>
+      <option value="gender">gender</option>
+      <option value="education">education</option>
+    </datalist><br>
+
+
+    <h5>Порядок</h5>
+    <input type="text" name="ascendingOrDescending" list="DescAsc" />
+    <datalist id="DescAsc">
+      <option value="desc">desc</option>
+      <option value="asc">asc</option>
+    </datalist><br>
     <button type="submit">Упорядочить</button>
   </form>
 
 
   <form method="get">
     <H4>Упорядочить рабочие места</H4>
-    <label>
-      Укажите столбец
-      <input type="text" name="column1">
-    </label><br>
-    <label>
-      Укажите порядок "DESC ASC"
-      <input type="text" name="ascendingOrDescending1">
-    </label><br>
+<%--    <label>--%>
+<%--      Укажите столбец--%>
+<%--      <input type="text" name="column1">--%>
+<%--    </label><br>--%>
+    <h5>По столбцу</h5>
+    <input type="text" name="column1" list="columnOfPos" />
+    <datalist id="columnOfPos">
+      <option value="id">id</option>
+      <option value="activity">activity</option>
+      <option value="specialization">specialization</option>
+    </datalist><br>
+    <h5>Порядок</h5>
+    <input type="text" name="ascendingOrDescending1" list="DescAsc1" />
+    <datalist id="DescAsc1">
+      <option value="desc">desc</option>
+      <option value="asc">asc</option>
+    </datalist><br>
     <button type="submit">Упорядочить</button>
   </form>
+  <c:choose>
+    <c:when test="${requestScope.ErrorOfFilter!=null}">
+      <h2>Пожалуйста, заполните все поля!</h2>
+    </c:when>
+  </c:choose>
   <button onclick="location.href='/change'">Создать запись или  отредактировать существуюшую</button>
 </div>
   </body>

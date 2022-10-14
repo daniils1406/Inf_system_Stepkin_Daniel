@@ -36,11 +36,9 @@ public class MainPage extends HttpServlet {
         String SQLRead;
 
 
-
-
-
-
+        System.out.println(req.getParameter("column"));
         if(req.getParameter("column")!=null && req.getParameter("ascendingOrDescending")!=null && req.getParameter("column")!="" && req.getParameter("ascendingOrDescending")!=""){
+
             SQLRead = "SELECT * FROM employee order by "+req.getParameter("column")+" "+req.getParameter("ascendingOrDescending")+"";
             PastSelectForEmployee=SQLRead;
         }else{
@@ -61,12 +59,14 @@ public class MainPage extends HttpServlet {
                 employees.add(employee);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            req.setAttribute("ErrorOfFilter","Неверный ввод");
+            //throw new RuntimeException(e);
         }
 
 
 
         if(req.getParameter("column1")!=null && req.getParameter("ascendingOrDescending1")!=null && req.getParameter("column1")!="" && req.getParameter("ascendingOrDescending1")!=""){
+
             SQLRead = "SELECT * FROM position order by "+req.getParameter("column1")+" "+req.getParameter("ascendingOrDescending1");
             PastSelectForPosition=SQLRead;
         }else{
@@ -181,7 +181,7 @@ public class MainPage extends HttpServlet {
             }
             resp.sendRedirect("/");
         }else {
-            RequestDispatcher requestDispatcher=req.getRequestDispatcher("views/index.jsp");
+            RequestDispatcher requestDispatcher=req.getRequestDispatcher("WEB-INF/views/index.jsp");
             requestDispatcher.forward(req,resp);
         }
 

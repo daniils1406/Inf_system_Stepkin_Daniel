@@ -1,12 +1,5 @@
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="app.DataBaseConnection.PostgresConnectionToDataBase" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.DatabaseMetaData" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ page import="app.entities.ColumnAndType" %><%--
+
+<%@ taglib prefix="c" uri="jakarta.tags.core" %><%--
   Created by IntelliJ IDEA.
   User: danii
   Date: 01.10.2022
@@ -190,8 +183,9 @@
 
 
 <button onclick="location.href='..'">Вернутся</button>
+<c:set var="y" value="${sessionScope.Error}"/>
 <c:choose>
-    <c:when test="${requestScope.Error!=null}">
+    <c:when test="${y==false}">
         <h2>Пожалуйста, заполните все поля!</h2>
     </c:when>
 </c:choose>
