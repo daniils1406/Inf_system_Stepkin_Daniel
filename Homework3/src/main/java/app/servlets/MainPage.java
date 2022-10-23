@@ -33,17 +33,33 @@ public class MainPage extends HttpServlet {
         List<Link> links = new LinkedList<>();
         List<List<String>> outList = new LinkedList<>();
         List<Integer> deleteThisFromList=new LinkedList<>();
-        String SQLRead;
+        String SQLRead="SELECT * FROM employee";
 
-
-        System.out.println(req.getParameter("column"));
-        if(req.getParameter("column")!=null && req.getParameter("ascendingOrDescending")!=null && req.getParameter("column")!="" && req.getParameter("ascendingOrDescending")!=""){
-
-            SQLRead = "SELECT * FROM employee order by "+req.getParameter("column")+" "+req.getParameter("ascendingOrDescending")+"";
+        if(req.getParameter("argumentOfSelection")!=null && req.getParameter("columnForSelection")!=null){
+            System.out.println(1);
+            req.getSession().setAttribute("columnForSelection",req.getParameter("columnForSelection"));
+            req.getSession().setAttribute("argumentOfSelection",req.getParameter("argumentOfSelection"));
+        }
+        if(req.getSession().getAttribute("argumentOfSelection")!="" && req.getSession().getAttribute("argumentOfSelection")!=null){
+            if(req.getSession().getAttribute("columnForSelection").equals("id")){
+                SQLRead=SQLRead+" WHERE "+req.getSession().getAttribute("columnForSelection")+"="+req.getSession().getAttribute("argumentOfSelection")+"";
+                PastSelectForEmployee=SQLRead;
+            }else{
+                SQLRead=SQLRead+" WHERE "+req.getSession().getAttribute("columnForSelection")+"= \'"+req.getSession().getAttribute("argumentOfSelection")+"\'";
+                PastSelectForEmployee=SQLRead;
+            }
+        } else if (req.getSession().getAttribute("argumentOfSelection")=="") {
+            SQLRead="SELECT * FROM employee";
+            PastSelectForEmployee=SQLRead;
+        }
+        if(req.getParameter("column")!=null && req.getParameter("ascendingOrDescending")!=null){
+            SQLRead = SQLRead+" order by "+req.getParameter("column")+" "+req.getParameter("ascendingOrDescending")+"";
             PastSelectForEmployee=SQLRead;
         }else{
             SQLRead = PastSelectForEmployee;
         }
+
+
         try {
             statement = connection.prepareStatement(SQLRead);
             ResultSet resultSet = statement.executeQuery();
@@ -64,14 +80,30 @@ public class MainPage extends HttpServlet {
         }
 
 
-
-        if(req.getParameter("column1")!=null && req.getParameter("ascendingOrDescending1")!=null && req.getParameter("column1")!="" && req.getParameter("ascendingOrDescending1")!=""){
-
-            SQLRead = "SELECT * FROM position order by "+req.getParameter("column1")+" "+req.getParameter("ascendingOrDescending1");
+        SQLRead="SELECT * FROM position";
+        if(req.getParameter("argumentOfSelection1")!=null && req.getParameter("columnForSelection1")!=null){
+            req.getSession().setAttribute("columnForSelection1",req.getParameter("columnForSelection1"));
+            req.getSession().setAttribute("argumentOfSelection1",req.getParameter("argumentOfSelection1"));
+        }
+        if(req.getSession().getAttribute("argumentOfSelection1")!="" && req.getSession().getAttribute("argumentOfSelection1")!=null){
+            if(req.getSession().getAttribute("columnForSelection1").equals("id")){
+                SQLRead=SQLRead+" WHERE "+req.getSession().getAttribute("columnForSelection1")+"="+req.getSession().getAttribute("argumentOfSelection1")+"";
+                PastSelectForPosition=SQLRead;
+            }else{
+                SQLRead=SQLRead+" WHERE "+req.getSession().getAttribute("columnForSelection1")+"= \'"+req.getSession().getAttribute("argumentOfSelection1")+"\'";
+                PastSelectForPosition=SQLRead;
+            }
+        } else if (req.getSession().getAttribute("argumentOfSelection1")=="") {
+            SQLRead="SELECT * FROM position";
+            PastSelectForPosition=SQLRead;
+        }
+        if(req.getParameter("column1")!=null && req.getParameter("ascendingOrDescending1")!=null){
+            SQLRead = SQLRead+" order by "+req.getParameter("column1")+" "+req.getParameter("ascendingOrDescending1")+"";
             PastSelectForPosition=SQLRead;
         }else{
             SQLRead = PastSelectForPosition;
         }
+
         try {
             statement = connection.prepareStatement(SQLRead);
             ResultSet resultSet = statement.executeQuery();
@@ -84,7 +116,8 @@ public class MainPage extends HttpServlet {
                 positions.add(position);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            req.setAttribute("ErrorOfFilter","Неверный ввод");
+            //throw new RuntimeException(e);
         }
 
 
@@ -143,7 +176,6 @@ public class MainPage extends HttpServlet {
 
 
         if(req.getParameter("Delete")!=null){
-
             for(int i=0;i< employees.size();i++){
                 try {
                     String SQLDelete="DELETE FROM employee WHERE id=?";
@@ -184,9 +216,6 @@ public class MainPage extends HttpServlet {
             RequestDispatcher requestDispatcher=req.getRequestDispatcher("WEB-INF/views/index.jsp");
             requestDispatcher.forward(req,resp);
         }
-
-
-
     }
 
 

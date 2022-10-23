@@ -14,7 +14,7 @@
   <body>
   <script type="text/javascript" src="/js/jquery-3.6.1.min.js"></script>
   <style>
-    div{
+    .f{
       position: static;
       width: 400px;
       height: 400px;
@@ -98,58 +98,87 @@
     <button type="submit" style="float: left;">Удалить выделенные сущности</button>
   </form>
 
-<div>
+
+  <div class="f">
+    <form method="get">
+      <h4>Отобрать сотрудников по(укажите пустое поле для отмены фильтрации):</h4>
+      <select name="columnForSelection">
+        <option value="id">id</option>
+        <option value="first_name">first_name</option>
+        <option value="last_name">last_name</option>
+        <option value="birthday">birthday</option>
+        <option value="gender">gender</option>
+        <option value="education">education</option>
+      </select>
+      <input type="text" name="argumentOfSelection">
+      <button type="submit">Отобрать</button>
+    </form>
+  </div>
+
+
+
+
   <form method="get">
     <h4>Упорядочить сотрудников</h4>
     <h5>По столбцу</h5>
-    <input type="text" name="column" list="columnOfEmp" />
-    <datalist id="columnOfEmp">
+    <select name="column">
       <option value="id">id</option>
       <option value="first_name">first_name</option>
       <option value="last_name">last_name</option>
       <option value="birthday">birthday</option>
       <option value="gender">gender</option>
       <option value="education">education</option>
-    </datalist><br>
+    </select><br>
 
 
     <h5>Порядок</h5>
-    <input type="text" name="ascendingOrDescending" list="DescAsc" />
-    <datalist id="DescAsc">
-      <option value="desc">desc</option>
+
+    <select name="ascendingOrDescending">
       <option value="asc">asc</option>
-    </datalist><br>
+      <option value="desc">desc</option>
+    </select><br>
     <button type="submit">Упорядочить</button>
   </form>
 
+  <div>
+    <form method="get">
+      <h4>Отобрать рабочие места по(укажите пустое поле для отмены фильтрации):</h4>
+      <select name="columnForSelection1">
+        <option value="id">id</option>
+        <option value="activity">activity</option>
+        <option value="specialization">specialization</option>
+      </select>
+      <input type="text" name="argumentOfSelection1">
+      <button type="submit">Отобрать</button>
+    </form>
+  </div>
 
   <form method="get">
     <H4>Упорядочить рабочие места</H4>
-<%--    <label>--%>
-<%--      Укажите столбец--%>
-<%--      <input type="text" name="column1">--%>
-<%--    </label><br>--%>
+
     <h5>По столбцу</h5>
-    <input type="text" name="column1" list="columnOfPos" />
-    <datalist id="columnOfPos">
+    <select name="column1">
       <option value="id">id</option>
       <option value="activity">activity</option>
       <option value="specialization">specialization</option>
-    </datalist><br>
+    </select><br>
     <h5>Порядок</h5>
-    <input type="text" name="ascendingOrDescending1" list="DescAsc1" />
-    <datalist id="DescAsc1">
-      <option value="desc">desc</option>
+<%--    <input type="text" name="ascendingOrDescending1" list="DescAsc1" />--%>
+<%--    <datalist id="DescAsc1">--%>
+<%--      <option value="desc">desc</option>--%>
+<%--      <option value="asc">asc</option>--%>
+<%--    </datalist><br>--%>
+    <select name="ascendingOrDescending1">
       <option value="asc">asc</option>
-    </datalist><br>
+      <option value="desc">desc</option>
+    </select><br>
     <button type="submit">Упорядочить</button>
   </form>
   <c:choose>
     <c:when test="${requestScope.ErrorOfFilter!=null}">
-      <h2>Пожалуйста, заполните все поля!</h2>
+      <h2>${requestScope.ErrorOfFilter}</h2>
     </c:when>
   </c:choose>
   <button onclick="location.href='/change'">Создать запись или  отредактировать существуюшую</button>
-</div>
   </body>
 </html>

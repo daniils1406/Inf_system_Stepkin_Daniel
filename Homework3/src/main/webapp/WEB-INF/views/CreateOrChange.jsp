@@ -27,7 +27,7 @@
 
     <c:choose>
         <c:when test="${requestScope.CreateNewEmployee!=null && sessionScope.ColumnsOfTable!=null}">
-            <form method="post">
+            <form method="post" action="/newEmployee">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
@@ -60,7 +60,7 @@
 
     <c:choose>
         <c:when test="${requestScope.CreateNewPosition!=null && sessionScope.ColumnsOfTable!=null}">
-            <form method="post">
+            <form method="post" action="/newPosition">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
@@ -90,7 +90,7 @@
 </form>
 <c:choose>
     <c:when test="${requestScope.UpdateEmployee!=null && sessionScope.ColumnsOfTable!=null}">
-        <form method="post">
+        <form method="post" action="/changeEmployee">
             <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
             <c:forEach var="i" items="${y}" varStatus="loop">
                 <label>
@@ -112,7 +112,7 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.UpdatePosition!=null && sessionScope.ColumnsOfTable!=null}">
-            <form method="post">
+            <form method="post" action="/changePosition">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <label>
@@ -135,7 +135,7 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.CreateLink!=null && sessionScope.ColumnsOfTable!=null}">
-            <form method="post">
+            <form method="post" action="/newLink">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
@@ -162,7 +162,7 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.DeleteLink!=null && sessionScope.ColumnsOfTable!=null}">
-            <form method="post">
+            <form method="post" action="/deleteLink">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
