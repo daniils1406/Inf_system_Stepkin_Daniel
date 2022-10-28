@@ -18,38 +18,42 @@ public class ChangeTable extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Connection connection = PostgresConnectionToDataBase.getConnection();
         List<String> p = new LinkedList<>();
-        req.setAttribute("CreateNewPosition", req.getParameter("CreateNewPosition"));
-        req.setAttribute("CreateNewEmployee", req.getParameter("CreateNewEmployee"));
-        req.setAttribute("UpdateEmployee", req.getParameter("UpdateEmployee"));
-        req.setAttribute("UpdatePosition", req.getParameter("UpdatePosition"));
-        req.setAttribute("CreateLink",req.getParameter("CreateLink"));
-        req.setAttribute("DeleteLink",req.getParameter("DeleteLink"));
+
+        req.setAttribute("button",req.getParameter("button"));
 
         DatabaseMetaData md = null;
-        try {
-            md = connection.getMetaData();
-            if (req.getAttribute("CreateNewEmployee") != null || req.getAttribute("UpdateEmployee") != null) {
-                ResultSet resultSet = md.getColumns(null, null, "employee", null);
-                while (resultSet.next()) {
-                    p.add(resultSet.getString("COLUMN_NAME"));
+        if(req.getAttribute("button")!=null){
+            System.out.println(req.getAttribute("button"));
+            try {
+                md = connection.getMetaData();
+                if (req.getAttribute("button").equals("CreateEmployee") || req.getAttribute("button").equals("UpdateEmployee")) {
+                    System.out.println("1");
+                    ResultSet resultSet = md.getColumns(null, null, "employee", null);
+                    while (resultSet.next()) {
+                        p.add(resultSet.getString("COLUMN_NAME"));
+                    }
                 }
-            }
-            if (req.getAttribute("CreateNewPosition") != null || req.getAttribute("UpdatePosition") != null) {
-                ResultSet resultSet = md.getColumns(null, null, "position", null);
-                while (resultSet.next()) {
-                    p.add(resultSet.getString("COLUMN_NAME"));
+                if (req.getAttribute("button").equals("CreatePosition") || req.getAttribute("button").equals("UpdatePosition")) {
+                    System.out.println("2");
+                    ResultSet resultSet = md.getColumns(null, null, "position", null);
+                    while (resultSet.next()) {
+                        p.add(resultSet.getString("COLUMN_NAME"));
+                    }
                 }
-            }
-            if (req.getAttribute("CreateLink") != null || req.getAttribute("DeleteLink") != null) {
-                ResultSet resultSet = md.getColumns(null, null, "link", null);
-                while (resultSet.next()) {
-                    p.add(resultSet.getString("COLUMN_NAME"));
+                if (req.getAttribute("button").equals("CreateLink") || req.getAttribute("button").equals("DeleteLink")) {
+                    System.out.println("3");
+                    ResultSet resultSet = md.getColumns(null, null, "link", null);
+                    while (resultSet.next()) {
+                        p.add(resultSet.getString("COLUMN_NAME"));
+                    }
                 }
+                req.getSession().setAttribute("ColumnsOfTable",p);
+                System.out.println(p.toString());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            req.getSession().setAttribute("ColumnsOfTable",p);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
+
 
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/views/CreateOrChange.jsp");

@@ -36,7 +36,6 @@ public class MainPage extends HttpServlet {
         String SQLRead="SELECT * FROM employee";
 
         if(req.getParameter("argumentOfSelection")!=null && req.getParameter("columnForSelection")!=null){
-            System.out.println(1);
             req.getSession().setAttribute("columnForSelection",req.getParameter("columnForSelection"));
             req.getSession().setAttribute("argumentOfSelection",req.getParameter("argumentOfSelection"));
         }
@@ -76,7 +75,6 @@ public class MainPage extends HttpServlet {
             }
         } catch (SQLException e) {
             req.setAttribute("ErrorOfFilter","Неверный ввод");
-            //throw new RuntimeException(e);
         }
 
 
@@ -117,7 +115,6 @@ public class MainPage extends HttpServlet {
             }
         } catch (SQLException e) {
             req.setAttribute("ErrorOfFilter","Неверный ввод");
-            //throw new RuntimeException(e);
         }
 
 
@@ -171,8 +168,8 @@ public class MainPage extends HttpServlet {
                 outList.add(q);
             }
             employeeWithoutWork = true;
-            req.setAttribute("outList", outList);
         }
+        req.setAttribute("outList", outList);
 
 
         if(req.getParameter("Delete")!=null){
