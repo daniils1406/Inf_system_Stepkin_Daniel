@@ -27,7 +27,7 @@
 
     <c:choose>
         <c:when test="${requestScope.button=='CreateEmployee'}">
-            <form method="post" action="/newEmployee">
+            <form method="post" action="/new">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
@@ -44,7 +44,7 @@
                     Введите id желаемых позииций
                     <input type="text" name="idOfPosition">
                 </label><br>
-                <button type="submit">Внести нового сотрудника</button>
+                <button type="submit" name="EmpOrPos" value="Emp">Внести нового сотрудника</button>
             </form>
         </c:when>
     </c:choose>
@@ -60,7 +60,7 @@
 
     <c:choose>
         <c:when test="${requestScope.button=='CreatePosition'}">
-            <form method="post" action="/newPosition">
+            <form method="post" action="/new">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
@@ -68,7 +68,7 @@
                             <br>
                             <label>
                                     ${i}
-                                <input type="text" name="value1${loop.index}">
+                                <input type="text" name="value${loop.index}">
                             </label><br>
                         </c:when>
                     </c:choose>
@@ -77,7 +77,7 @@
                     Введите id желаемых позииций
                     <input type="text" name="idOfEmployee">
                 </label><br>
-                <button type="submit">Внести новую позицию</button>
+                <button type="submit" name="EmpOrPos" value="Pos">Внести новую позицию</button>
             </form>
         </c:when>
     </c:choose>
@@ -90,15 +90,15 @@
 </form>
 <c:choose>
     <c:when test="${requestScope.button=='UpdateEmployee'}">
-        <form method="post" action="/changeEmployee">
+        <form method="post" action="/changeEnt">
             <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
             <c:forEach var="i" items="${y}" varStatus="loop">
                 <label>
                     ${i}
-                    <input type="text" name="valueForUpdate${loop.index}">
+                    <input type="text" name="value${loop.index}">
                 </label><br>
             </c:forEach>
-            <button style="float: left" type="submit">Внести нового сотрудника</button>
+            <button style="float: left" type="submit" name="EmpOrPos" value="Emp">Внести нового сотрудника</button>
         </form>
     </c:when>
 </c:choose>
@@ -112,15 +112,15 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.button=='UpdatePosition'}">
-            <form method="post" action="/changePosition">
+            <form method="post" action="/changeEnt">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <label>
                         ${i}
-                        <input type="text" name="valueForUpdate1${loop.index}">
+                        <input type="text" name="value${loop.index}">
                     </label><br>
                 </c:forEach>
-                <button style="float: left" type="submit">Внести новое рабочее место</button>
+                <button style="float: left" type="submit" name="EmpOrPos" value="Pos">Внести новое рабочее место</button>
             </form>
         </c:when>
     </c:choose>
@@ -135,19 +135,19 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.button=='CreateLink'}">
-            <form method="post" action="/newLink">
+            <form method="post" action="/link">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
                         <c:when test="${loop.index!=0}">
                             <label>
                                 ${i}
-                                <input type="text" name="valueForCreateLink${loop.index}">
+                                <input type="text" name="value${loop.index}">
                             </label><br>
                         </c:when>
                     </c:choose>
                 </c:forEach>
-                <button style="float: left" type="submit">Назначить сотрудника</button>
+                <button style="float: left" type="submit" name="DelOrCre" value="Cre">Назначить сотрудника</button>
             </form>
         </c:when>
     </c:choose>
@@ -162,19 +162,19 @@
 </form>
     <c:choose>
         <c:when test="${requestScope.button=='DeleteLink'}">
-            <form method="post" action="/deleteLink">
+            <form method="post" action="/link">
                 <c:set var="y" value="${sessionScope.ColumnsOfTable}"/>
                 <c:forEach var="i" items="${y}" varStatus="loop">
                     <c:choose>
                         <c:when test="${loop.index!=0}">
                             <label>
                                     ${i}
-                                <input type="text" name="valueForDeleteLink${loop.index}">
+                                <input type="text" name="value${loop.index}">
                             </label><br>
                         </c:when>
                     </c:choose>
                 </c:forEach>
-                <button style="float: left" type="submit">Снять сотрудника</button>
+                <button style="float: left" type="submit" name="DelOrCre" value="Del">Снять сотрудника</button>
             </form>
         </c:when>
     </c:choose>

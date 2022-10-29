@@ -163,11 +163,6 @@
       <option value="specialization">specialization</option>
     </select><br>
     <h5>Порядок</h5>
-<%--    <input type="text" name="ascendingOrDescending1" list="DescAsc1" />--%>
-<%--    <datalist id="DescAsc1">--%>
-<%--      <option value="desc">desc</option>--%>
-<%--      <option value="asc">asc</option>--%>
-<%--    </datalist><br>--%>
     <select name="ascendingOrDescending1">
       <option value="asc">asc</option>
       <option value="desc">desc</option>

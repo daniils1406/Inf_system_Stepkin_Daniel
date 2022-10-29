@@ -169,6 +169,7 @@ public class MainPage extends HttpServlet {
             }
             employeeWithoutWork = true;
         }
+
         req.setAttribute("outList", outList);
 
 
