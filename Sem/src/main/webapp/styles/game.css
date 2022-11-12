@@ -1,0 +1,30 @@
+.delete{
+    background-color: royalblue;color: antiquewhite;width: 200px;height: 30px
+}
+.buy{
+    background-color: gray;color: antiquewhite;width: 200px;height: 30px;
+    margin-top: 10px;
+}
+.buy:hover{
+    background-color: darkgray;color: antiquewhite;width: 200px;height: 30px;
+    margin-top: 10px;
+}
+
+label{
+    color: white;
+}
+
+.inf{
+    position: absolute; top: 700px;
+}
+
+p{
+    color: antiquewhite;
+}
+h1{
+    color: antiquewhite;
+}
+
+.redact{
+    color: white;float: left;
+}

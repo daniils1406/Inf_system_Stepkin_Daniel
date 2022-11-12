@@ -1,0 +1,75 @@
+.choice{
+    width: 300px;
+    border: none;
+    height: 50px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: darkgray;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.buy{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    align-content: center;background-color: gray;color: antiquewhite;width: 200px;height: 30px;
+    margin-top: 10px;
+}
+
+.buy:hover{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    align-content: center;background-color: darkgray;color: antiquewhite;width: 200px;height: 30px;
+    margin-top: 10px;
+}
+
+.imageButton{
+    border: none;background-color: white
+}
+
+
+.choice:hover{
+    width: 300px;
+    border: none;
+    height: 50px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: white;
+}
+
+.game{
+    float: left;
+    width: 100px;
+    height: 100px;
+    border-width:1px;
+    border-color: rgb(190,190,190);
+    border-style: solid;
+}
+
+.gameWrapper{
+    float: left;
+    width: 100px;
+    height: 140px;
+}
+
+.sonyDiv{
+    width: 100%;height: 30px; background-color: black
+}
+
+.sonyWrite{
+    margin: 0px; color: white
+}
+
+.menu{
+    background-color: darkgrey;height: 1000px;width: 300px; margin: 0px;float: left
+}
+
+.avatar{
+    margin-left: 10px;margin-top: 10px;float: left;height: 50px; width: 50px
+}
+
+.image1{
+    object-fit: cover;width: 100px;height: 100px; border-width:0px;border-color: rgb(190,190,190);border-style: solid;border-radius: 18px;
+}
