@@ -1,15 +1,14 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class SocketClient {
     Socket clientSocket;
-    InputStream reader;
-    OutputStream writer;
+    BufferedReader reader;
+    PrintWriter writer;
     int number=0;
     static int id=0;
     public static List<SocketClient> list=new LinkedList<>();
@@ -29,8 +28,8 @@ public class SocketClient {
         try{
             SocketClient client=new SocketClient();
             client.clientSocket=new Socket(host,port);
-            client.reader=client.clientSocket.getInputStream();
-            client.writer=client.clientSocket.getOutputStream();
+            client.reader=new BufferedReader(new InputStreamReader(client.clientSocket.getInputStream()));
+            client.writer=new PrintWriter(client.clientSocket.getOutputStream());
             client.number=++id;
             list.add(client);
             return client;
@@ -39,62 +38,66 @@ public class SocketClient {
         }
     }
 
-    public SocketClient(String host, Integer port,InputStream reader,OutputStream writer){
+
+    public boolean connect(String message){
         try{
-            this.clientSocket=new Socket(host,port);
-            this.reader=reader;
-            this.writer=writer;
-            number=++id;
+            Scanner sc=new Scanner(System.in);
+            writer.println(message);
+            writer.flush();
+            System.out.println("Отправлем "+message);
+            System.out.println("Укажите номер комнаты:");
+            message=sc.nextLine();
+            System.out.println("Отправлем "+message);
+            writer.println(message);
+            writer.flush();
+            String response=reader.readLine();
+            System.out.println("Получаем "+response);
+            if(response.equals("Ошибка")){
+                return true;
+            }
+            return false;
         }catch (IOException e){
             throw new RuntimeException(e);
         }
     }
 
-    private byte[] extendArray(byte[] oldArray) {
-        int oldSize = oldArray.length;
-        byte[] newArray = new byte[oldSize * 2];
-        System.arraycopy(oldArray, 0, newArray, 0, oldSize);
-        return newArray;
-    }
 
-
-    private byte[] readInput(InputStream stream) throws IOException {
-        int b;
-        byte[] buffer = new byte[10];
-        int counter = 0;
-        while ((b = stream.read()) > -1) {
-            buffer[counter++] = (byte) b;
-            if (counter >= buffer.length) {
-                buffer = extendArray(buffer);
-            }
-            if (counter > 1 && TicPacket.compareEOP(buffer, counter - 1)) {
-                break;
-            }
-        }
-        byte[] data = new byte[counter];
-        System.arraycopy(buffer, 0, data, 0, counter);
-        return data;
-    }
-
-
-
-    public boolean makeTurn(TicTacPacket packet){
+    public boolean sign(String message){
         try{
-            System.out.println(Arrays.toString(packet.toByteArray()));
-            writer.write(packet.toByteArray());
+            writer.println(message);
             writer.flush();
-            byte[] dataTable=readInput(reader);
-            TicPacket packetTable=TicPacket.parse(dataTable);
-            char[] table=packetTable.getValue(1);
+            System.out.println("Отправлем "+message);
+            String response=reader.readLine();
+            System.out.println("Получаем "+response);
+            if(response.equals("Ошибка")){
+                return true;
+            }
+            return false;
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean makeTurn(String turn){
+        try{
+            writer.println(turn);
+            writer.flush();
+            System.out.println("Отправлем "+turn);
+            String terribleString=reader.readLine();
+            System.out.println("Получаем "+terribleString);
+            char[] table=new char[9];
+            if(terribleString.length()==10){
+                System.out.println("Game is over!");
+                return true;
+            }
+            for(int i=0;i<terribleString.length();i++){
+                table[i]=terribleString.charAt(i);
+            }
             for(int i=0;i<table.length;i++){
                 System.out.print(table[i]);
                 if(i%3==2){
                     System.out.println("");
                 }
-            }
-            if(packetTable.getValue(2)!=null){
-                System.out.println("Game is over!");
-                return true;
             }
             return false;
         }catch (IOException e){

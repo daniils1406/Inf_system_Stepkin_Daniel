@@ -1,38 +1,30 @@
 import java.util.Scanner;
 
 public class UI {
-    public static void start(SocketClient client,int number){
+    public static void start(SocketClient client){
         Scanner sc=new Scanner(System.in);
+        System.out.println("1: Создать игру");
+        System.out.println("2: Присоеденитсья к существующей");
+        String signIn=sc.nextLine();
+        int number=Integer.parseInt(signIn);
+        if(number==1){
+            client.sign(signIn);
+        }else{
+            if(client.connect(signIn)){
+                return;
+            };
+        }
         while (true){
-            TicTacPacket packet=TicTacPacket.create(number);
-//            System.out.println(client.number);
+            System.out.println(number);
             System.out.println("Введите ваш ход в формате \"Строка-столбец\"");
             String turn=sc.nextLine();
             String[] rowAndColumn=turn.split("-");
-            packet.setValue(1,(byte)Integer.parseInt(rowAndColumn[0]),(byte)Integer.parseInt(rowAndColumn[1]));
-            boolean finish=client.makeTurn(packet);
+            turn=String.valueOf(number)+"-"+turn;
+            boolean finish=client.makeTurn(turn);
             if(finish){
                 break;
             }
         }
     }
 
-    public static void start(){
-        Scanner sc=new Scanner(System.in);
-        while (true){
-            System.out.println("Введите id игорка");
-            String id=sc.nextLine();
-            TicTacPacket packet=TicTacPacket.create(Integer.parseInt(id));
-            SocketClient client=SocketClient.findClient(Integer.parseInt(id));
-            System.out.println(client.reader+" "+client.writer);
-            System.out.println("Введите ваш ход в формате \"Строка-столбец\"");
-            String turn= sc.nextLine();
-            String[] rowAndColumn=turn.split("-");
-            packet.setValue(1,(byte)Integer.parseInt(rowAndColumn[0]),(byte)Integer.parseInt(rowAndColumn[1]));
-            boolean finish=client.makeTurn(packet);
-            if(finish){
-                break;
-            }
-        }
-    }
 }
