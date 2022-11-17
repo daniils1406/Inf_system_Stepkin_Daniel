@@ -80,14 +80,10 @@ public class SocketClient {
 
     public boolean makeTurn(TicTacPacket packet){
         try{
-            System.out.println("А мы данные то отправили?1");
             System.out.println(Arrays.toString(packet.toByteArray()));
             writer.write(packet.toByteArray());
-            System.out.println("А мы данные то отправили?2");
             writer.flush();
-            System.out.println("А мы данные то отправили?3");
             byte[] dataTable=readInput(reader);
-            System.out.println("А мы данные то отправили?4");
             TicPacket packetTable=TicPacket.parse(dataTable);
             char[] table=packetTable.getValue(1);
             for(int i=0;i<table.length;i++){
