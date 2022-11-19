@@ -44,14 +44,12 @@ public class SocketClient {
             Scanner sc=new Scanner(System.in);
             writer.println(message);
             writer.flush();
-            System.out.println("Отправлем "+message);
             System.out.println("Укажите номер комнаты:");
             message=sc.nextLine();
-            System.out.println("Отправлем "+message);
             writer.println(message);
             writer.flush();
             String response=reader.readLine();
-            System.out.println("Получаем "+response);
+            System.out.println(response);
             if(response.equals("Ошибка")){
                 return true;
             }
@@ -66,9 +64,8 @@ public class SocketClient {
         try{
             writer.println(message);
             writer.flush();
-            System.out.println("Отправлем "+message);
             String response=reader.readLine();
-            System.out.println("Получаем "+response);
+            System.out.println(response);
             if(response.equals("Ошибка")){
                 return true;
             }
@@ -78,15 +75,13 @@ public class SocketClient {
         }
     }
 
-    public boolean makeTurn(String turn){
+    public boolean makeTurn(){
         try{
-            writer.println(turn);
-            writer.flush();
-            System.out.println("Отправлем "+turn);
+            Scanner sc=new Scanner(System.in);
             String terribleString=reader.readLine();
-            System.out.println("Получаем "+terribleString);
             char[] table=new char[9];
             if(terribleString.length()==10){
+                System.out.println("Победа "+terribleString.charAt(terribleString.length()-1)+"");
                 System.out.println("Game is over!");
                 return true;
             }
@@ -99,9 +94,34 @@ public class SocketClient {
                     System.out.println("");
                 }
             }
+            String turn;
+            while (true){
+                System.out.println("Введите ваш ход в формате \"Строка-столбец\"");
+                turn=sc.nextLine();
+                String[] r=turn.split("-");
+                int position=(Integer.parseInt(r[0])-1)*3+(Integer.parseInt(r[1]));
+                if(table[position-1]!='_'){
+                    System.out.println("Вы сделали неверный ход, повторите попытку");
+                }else{
+                    break;
+                }
+            }
+
+//            turn=String.valueOf(number)+"-"+turn;
+            writer.println(turn);
+            writer.flush();
             return false;
         }catch (IOException e){
             throw new RuntimeException(e);
         }
+    }
+
+
+
+    public boolean makeTurn2(String turn){
+//        turn=String.valueOf(number)+"-"+turn;
+        writer.println(turn);
+        writer.flush();
+        return false;
     }
 }
