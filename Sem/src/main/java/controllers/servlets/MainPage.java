@@ -34,6 +34,7 @@ public class MainPage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println(req.getRequestURI());
         if(req.getSession().getAttribute("CurrentUser")!=null){
             User user= (User) req.getSession().getAttribute("CurrentUser");
             List<Long> PurchasedGames=gameService.purchasedGames(user.getId());
