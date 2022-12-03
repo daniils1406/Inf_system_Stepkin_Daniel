@@ -14,18 +14,13 @@ public class UI {
                 return;
             };
         }
-        boolean waitOfTable;
         if(number==1){
             System.out.println("Введите ваш ход в формате \"Строка-столбец\"");
             String turn=sc.nextLine();
-//            turn=String.valueOf(number)+"-"+turn;
             client.makeTurn2(turn);
         }
 
         while (true){
-//            System.out.println("Введите ваш ход в формате \"Строка-столбец\"");
-//            turn=sc.nextLine();
-//            turn=String.valueOf(number)+"-"+turn;
             boolean finish=client.makeTurn();
             if(finish){
                 break;

@@ -13,14 +13,6 @@ public class SocketClient {
     static int id=0;
     public static List<SocketClient> list=new LinkedList<>();
 
-    public static SocketClient findClient(int id) {
-        for(SocketClient client: list){
-            if(client.number==id){
-                return client;
-            }
-        }
-        return null;
-    }
 
     SocketClient(){}
 
@@ -107,7 +99,6 @@ public class SocketClient {
                 }
             }
 
-//            turn=String.valueOf(number)+"-"+turn;
             writer.println(turn);
             writer.flush();
             return false;
@@ -119,7 +110,6 @@ public class SocketClient {
 
 
     public boolean makeTurn2(String turn){
-//        turn=String.valueOf(number)+"-"+turn;
         writer.println(turn);
         writer.flush();
         return false;

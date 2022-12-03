@@ -11,8 +11,15 @@ public class Main {
         ThreadPoolExecutor serverPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
         SocketServer server = SocketServer.create(4444, serverPool);
 
+
         while (true) {
-            server.move();
+            synchronized (serverPool) {
+                serverPool.execute(server);
+
+                if (serverPool.getActiveCount() >= 4) {
+                    serverPool.wait();
+                }
+            }
         }
     }
 }
