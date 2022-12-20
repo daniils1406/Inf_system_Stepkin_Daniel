@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.Pane?>
+
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.VBox?>
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="1336.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Main1">
+    <children>
+        <ProgressBar fx:id="progressBar1" layoutX="101.0" layoutY="44.0" prefHeight="30.0" prefWidth="212.0" progress="0.0" />
+        <Button onAction="#login1" layoutX="31.0" layoutY="47.0" mnemonicParsing="false" text="detail1" />
+        <Button onAction="#login2" layoutX="31.0" layoutY="155.0" mnemonicParsing="false" text="detail2" />
+        <ProgressBar fx:id="progressBar2" layoutX="101.0" layoutY="153.0" prefHeight="30.0" prefWidth="212.0" progress="0.0" />
+        <ProgressBar fx:id="progressBar3" layoutX="101.0" layoutY="267.0" prefHeight="30.0" prefWidth="212.0" progress="0.0" />
+        <Button onAction="#login3" layoutX="31.0" layoutY="269.0" mnemonicParsing="false" text="detail3" />
+        <ProgressBar fx:id="progressBar4" layoutX="403.0" layoutY="138.0" prefHeight="61.0" prefWidth="212.0" progress="0.0" />
+        <Line endX="-12.0" endY="107.5" layoutX="414.0" layoutY="60.0" startX="-100.0" />
+        <Line endX="70.0" endY="-0.5" layoutX="332.0" layoutY="168.0" startX="-19.0" />
+        <Line endX="44.0" endY="-75.5" layoutX="358.0" layoutY="243.0" startX="-45.0" startY="39.0" />
+        <TextField layoutX="435.0" layoutY="119.0" text="Сборочный конвеир" />
+        <ProgressBar fx:id="progressBar5" layoutX="698.0" layoutY="51.0" prefWidth="200.0" progress="0.0" />
+        <ProgressBar fx:id="progressBar6" layoutX="698.0" layoutY="158.0" prefWidth="200.0" progress="0.0" />
+        <ProgressBar fx:id="progressBar7" layoutX="698.0" layoutY="273.0" prefWidth="200.0" progress="0.0" />
+        <Line endX="24.0" endY="-27.0" layoutX="674.0" layoutY="87.0" startX="-59.0" startY="80.0" />
+        <Line endX="13.70709228515625" endY="22.29290771484375" layoutX="685.0" layoutY="144.0" startX="-70.0" startY="23.0" />
+        <Line endX="83.0" endY="57.0" layoutX="615.0" layoutY="225.0" startY="-58.0" />
+        <ProgressBar fx:id="progressBar8" layoutX="993.0" layoutY="159.0" prefHeight="18.0" prefWidth="123.0" progress="0.0" />
+<!--        <ProgressBar fx:id="progressBar9" layoutX="1199.0" layoutY="159.0" prefHeight="18.0" prefWidth="123.0" progress="0.0" />-->
+        <Line endX="39.0" endY="64.0" layoutX="954.0" layoutY="104.0" startX="-56.0" startY="-44.0" />
+        <Line endX="139.0" endY="48.0" layoutX="854.0" layoutY="120.0" startX="44.0" startY="47.0" />
+        <Line endX="173.7071533203125" endY="-22.5" layoutX="820.0" layoutY="190.0" startX="78.0" startY="92.0" />
+<!--        <Line endX="43.0" endY="-1.0" layoutX="1156.0" layoutY="169.0" startX="-40.0" startY="-1.0" />-->
+        <TextField layoutX="724.0" layoutY="26.0" text="Сборка салона" />
+        <TextField layoutX="724.0" layoutY="132.0" text="Сборка салона" />
+        <TextField layoutX="724.0" layoutY="248.0" text="Сборка салона" />
+        <TextField layoutX="1002.0" layoutY="132.0" prefHeight="25.0" prefWidth="106.0" text="Покраска" />
+<!--        <TextField layoutX="1199.0" layoutY="132.0" prefHeight="25.0" prefWidth="123.0" text="Финальные штрихи" />-->
+        <VBox fx:id="dryVBox" layoutX="1179.0" prefHeight="415.0" prefWidth="149.0" />
+    </children>
+</Pane>

@@ -1,0 +1,118 @@
+Index: src/main/java/client/Client.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/client/Client.java b/src/main/java/client/Client.java
+--- a/src/main/java/client/Client.java	
++++ b/src/main/java/client/Client.java	
+@@ -28,14 +28,18 @@
+     int x=-1;
+     int y=-1;
+ 
+-    InputStream inputStream;
+-    OutputStream outputStream;
++    public InputStream inputStream;
++    public OutputStream outputStream;
+ 
+     List<List<Object>> players;
+ 
+     String name;
+ 
++    public int kills=0;
++
+     public boolean gameIsFinished=false;
++    public boolean leaveApp=false;
++    public boolean nameIsBusy=false;
+ 
+     List<Sprite> otherPlayerAndBullets=new LinkedList<>();
+ 
+@@ -59,6 +63,13 @@
+         return y;
+     }
+ 
++    public void setPlayerName(String name){
++        this.name=name;
++    }
++    public String getPlayerName(){
++        return name;
++    }
++
+ 
+     public static Client create(String host, Integer port) {
+         try {
+@@ -100,23 +111,35 @@
+ 
+     public void run(){
+         try {
+-            x=-1;
+             y=-1;
++            x=-1;
+             int type=5;
+             MainPacket startCoordinate = null;
+-            while (type==5 || type==4){
++            while (type==5 || type==4 || type==6){
+                 byte[] StartCoordinateData=readInput(inputStream);
+                 startCoordinate= MainPacket.parse(StartCoordinateData);
+                 type=(int)startCoordinate.getType();
+             }
+-//            byte[] StartCoordinateData=readInput(inputStream);
+-//            MainPacket startCoordinate= MainPacket.parse(StartCoordinateData);
+             LinkedList<Integer> startXandY=startCoordinate.getValue(LinkedList.class);
++//            System.out.println(startXandY.toString());
+             x=startXandY.get(0);
+             y=startXandY.get(1);
+             while(true){
+                 byte[] ServerData=readInput(inputStream);
+                 MainPacket packet= MainPacket.parse(ServerData);
++                if(packet.getType()==6){
++                    gameIsFinished=true;
++                    nameIsBusy=true;
++                    MainPacket packetFromClientToServer = MainPacket.create(4);
++                    try {
++                        outputStream.write(packetFromClientToServer.toByteArray());
++                        outputStream.flush();
++                    } catch (IOException ex) {
++                        throw new RuntimeException(ex);
++                    }
++                    this.run();
++                    break;
++                }
+                 if(packet.getType()==4 || gameIsFinished){
+                     gameIsFinished=true;
+                     MainPacket packetFromClientToServer = MainPacket.create(4);
+@@ -129,6 +152,7 @@
+                     this.run();
+                     break;
+                 }
++                nameIsBusy=false;
+                 players=packet.getValue(List.class);
+                 List<Sprite> otherObjects=new LinkedList<>();
+                 for(List<Object> player: players){
+@@ -151,22 +175,18 @@
+                             direction= Main.Direction.LEFT;
+                             break;
+                     }
+-                    if(player.get(2)==null){
++                    if(String.valueOf(player.get(2)).contains("bullet")){
+                         otherObjects.add(new Sprite( XCoordinateInt,YCoordinateInt,3,3,"bullet", Color.WHITE,null,null,null,(String)player.get(2)));
+                     }else{
+-                        otherObjects.add(new Sprite( XCoordinateInt,YCoordinateInt,30,30,"otherPlayer", Color.RED,direction,null,null,(String)player.get(2)));
++                        otherObjects.add(new Sprite( XCoordinateInt,YCoordinateInt,30,30,"otherPlayer", Color.RED,direction,null,null,(String)player.get(2),Integer.parseInt((player.get(4).toString()))));
+                     }
+                 }
+                 otherPlayerAndBullets=otherObjects;
+-                /**
+-                 * ЗДЕСЬ МЫ ВСЕГДА БУДЕМ ОТ СЕРВЕРА ПОЛУЧАТЬ ПАКЕТ 5 ТИПА, НАДО НАЧАТЬ РАБОТАТЬ С JAVA FX
+-                 * ЧТОБЫ ПОНЯТЬ КАК ОТОБРАЖАТЬ НА ПОЛЕ ПОЛУЧЕННЫЕ КООРДИНАТЫ И НИКИ ИГРОКОВ(ВСЕ ЭТО ХРАНИТ Players)
+-                 */
+-
+ 
+             }
+         } catch (IOException e) {
+-            throw new RuntimeException(e);
++            System.out.println("Игра завершена!");
++//            throw new RuntimeException(e);   ????????????????????????????????????????????? КРИВАЯ ХЕРНЯ?
+         }
+     }
+ 

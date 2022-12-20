@@ -1,0 +1,413 @@
+Index: src/main/java/client/conroller/FormController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/client/conroller/FormController.java b/src/main/java/client/conroller/FormController.java
+--- a/src/main/java/client/conroller/FormController.java	
++++ b/src/main/java/client/conroller/FormController.java	
+@@ -23,7 +23,6 @@
+ import sprite.Sprite;
+ 
+ import java.io.IOException;
+-import java.io.InputStream;
+ import java.io.OutputStream;
+ import java.net.URL;
+ import java.util.LinkedList;
+@@ -43,11 +42,15 @@
+ 
+     OutputStream outputStream = Main.client.getOutputStream();
+ 
++
++    List<Rectangle> rectangles = new LinkedList<>();
++
+     MainPacket packetFromClientToServer;
+ 
+     List<sprite.Sprite> allObjects;
+     public Direction direction = null;
+     private Sprite player;
++    private String nickName;
+     private Pane root = new Pane();
+     private double t = 0;
+     @FXML
+@@ -78,53 +81,81 @@
+ 
+     private void update() {
+         t += 0.016;
+-//        System.out.println("ОБНОВЛЕНИЕ!");
+ 
+         if(Main.client.isGameIsFinished()){
+-            try {
+-                timer.stop();
+-                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/form.fxml")));
+-                Scene scene = new Scene(root);
+-                stage.setScene(scene);
+-                stage.show();
++            if(Main.client.nameIsBusy){
++                try {
++                    Main.client.gameIsFinished=false;
++                    Main.client.nameIsBusy=false;
++                    timer.stop();
++                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/form.fxml")));
++                    Scene scene = new Scene(root);
++                    stage.setScene(scene);
++                    stage.show();
++                    scene.setOnKeyPressed(e->{
++                        switch (e.getCode()){
++                            case ESCAPE:
++                                Main.client.leaveApp=true;
++                                try {
++                                    Main.client.inputStream.close();
++                                    Main.client.outputStream.close();
++                                } catch (IOException ex) {
++                                    throw new RuntimeException(ex);
++                                }
++                                stage.close();
++                        }
++                    });
++                    return;
++                }catch (Exception e){
++                    throw new RuntimeException(e);
++                }
++            }
++            try {
+                 Main.client.gameIsFinished=false;
++
++                timer.stop();
++                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/formForRespawn.fxml")));
++                Scene scene = new Scene(root);
++                stage.setScene(scene);
++                stage.show();
++                scene.setOnKeyPressed(e->{
++                    switch (e.getCode()){
++                        case ESCAPE:
++                            Main.client.leaveApp=true;
++                            try {
++                                Main.client.inputStream.close();
++                                Main.client.outputStream.close();
++                            } catch (IOException ex) {
++                                throw new RuntimeException(ex);
++                            }
++                            stage.close();
++                    }
++                });
+                 return;
+-//            stage.close();
+             }catch (Exception e){
+                 throw new RuntimeException(e);
+             }
+         }
+ 
+         allObjects=Main.client.getOtherPlayerAndBullets();
++        System.out.println(allObjects.toString());
+ 
+ 
+-//        System.out.println(allObjects.toString());
+ 
+-        List<Sprite> listOfSpritesFromRoot=new LinkedList<>();
+-        List<Sprite> listOfLevelBlocks=new LinkedList<>();
+ 
+-        for(Node node:root.getChildren()){
+-            if(!node.getClass().equals(Text.class)){
+-                listOfSpritesFromRoot.add((Sprite) node);
+-            }
+-        }
+-
+-        for(Sprite sprite: listOfSpritesFromRoot){
+-            if(sprite.type.contains("level")){
+-                listOfLevelBlocks.add(sprite);
+-            }
+-        }
+ 
+         root.getChildren().clear();
+ 
+         root.getChildren().add(player);
+ 
+-        for(Node sprite: listOfLevelBlocks){
+-            root.getChildren().add(sprite);
++
++
++        for(Rectangle rectangle: rectangles){
++            root.getChildren().add(rectangle);
+         }
+ 
+         for(Sprite sprite: allObjects){
+-            if(sprite.getNickName()!=null){
++            if(!sprite.getNickName().contains("bullet")){
+                 if(!sprite.getNickName().equals(player.getNickName())){
+                     switch (sprite.getDirection()){
+                         case UP:
+@@ -150,8 +181,11 @@
+                     nick.setTranslateX(sprite.getTranslateX());
+                     nick.setTranslateY(sprite.getTranslateY()+35);
+                     root.getChildren().add(nick);
++                }else{
++                    Main.client.kills= sprite.getKillingCount();
++                    stage.setTitle("TANKS!"+""+Main.client.kills);
+                 }
+-            }else{ // ПУСТОЕ ИМЯ ВОЗМОЖНО ТОЛЬКО У ПУЛЬ
++            }else{
+                 root.getChildren().add(sprite);
+             }
+         }
+@@ -176,18 +210,27 @@
+ 
+ 
+     public void login(ActionEvent event) throws IOException {
++        rectangles=new LinkedList<>();
+ 
+ 
+ 
+         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+ 
+ 
+-        TextField userName = new TextField(nameTextField.getText());
+-//        player.setNickName(nameTextField.getText());
++
+ 
+         //ОТПРАВЛЯЕМ СЕРВЕРУ НАШ НИК
+         packetFromClientToServer = MainPacket.create(1);
+-        packetFromClientToServer.setValue(userName.getText());
++        TextField userName = null;
++        if(Main.client.getPlayerName()==null){
++            userName = new TextField(nameTextField.getText());
++            packetFromClientToServer.setValue(userName.getText());
++        }else{
++            packetFromClientToServer.setValue(Main.client.getPlayerName());
++        }
++
++        System.out.println(packetFromClientToServer.getValue(String.class));
++
+         try {
+             outputStream.write(packetFromClientToServer.toByteArray());
+             outputStream.flush();
+@@ -196,41 +239,96 @@
+         }
+ 
+         while (true){
+-//            System.out.println(Main.client.getX());
+-            System.out.println();
++//            System.out.println("cdsc sdc");
+             if(Main.client.getX()!=-1){
+-
+                 break;
++            }else{
++                System.out.println(Main.client.getX());
+             }
+         }
++
++//        try {
++//            Thread.sleep(20);
++//        } catch (InterruptedException e) {
++//            throw new RuntimeException(e);
++//        }
+ 
+         player = new Sprite(Main.client.getX(), Main.client.getY(), 30, 30, "player", Color.BLUE, null,null,null,null);
+-        player.setNickName(nameTextField.getText());
++        if(Main.client.getPlayerName()==null){
++            player.setNickName(nameTextField.getText());
++            Main.client.setPlayerName(userName.getText());
++        }else{
++            player.setNickName(Main.client.getPlayerName());
++        }
++        if(Main.client.nameIsBusy){
++            Main.client.setPlayerName(null);
++        }
++
+ 
+         Scene scene = new Scene(createContent(), 390, 390, Color.BLACK);
+-        List<Rectangle> rectangles = new LinkedList<>();
+-        rectangles.add(new Sprite(180, 90, 30, 30, "level1", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(150, 150, 30, 30, "level2", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(210, 150, 30, 30, "level3", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(270, 180, 60, 30, "level4", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(360, 180, 30, 30, "level5", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(180, 210, 30, 30, "level6", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(30, 30, 30, 120, "level7", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(90, 30, 30, 120, "level8", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(270, 30, 30, 120, "level9", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(330, 30, 30, 120, "level10", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(210, 30, 30, 90, "level11", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(150, 30, 30, 90, "level12", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(210, 210, 30, 90, "level13", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(150, 210, 30, 90, "level14", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(210, 330, 30, 60, "level15", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(330, 270, 30, 90, "level16", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(270, 270, 30, 90, "level17", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(30, 270, 30, 90, "level18", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(90, 270, 30, 90, "level19", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(150, 330, 30, 60, "level20", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(60, 180, 60, 30, "level21", Color.BLUE, null,null,null,null));
+-        rectangles.add(new Sprite(0, 180, 30, 30, "level22", Color.BLUE, null,null,null,null));
++        rectangles.add(new Rectangle(30, 30, 30, 30));
++        rectangles.add(new Rectangle(90, 30, 30, 30));
++        rectangles.add(new Rectangle(150, 30, 30, 30));
++        rectangles.add(new Rectangle(210, 30, 30, 30));
++        rectangles.add(new Rectangle(270, 30, 30, 30));
++        rectangles.add(new Rectangle(330, 30, 30, 30));
++        rectangles.add(new Rectangle(30, 60, 30, 30));
++        rectangles.add(new Rectangle(90, 60, 30, 30));
++        rectangles.add(new Rectangle(150, 60, 30, 30));
++        rectangles.add(new Rectangle(210, 60, 30, 30));
++        rectangles.add(new Rectangle(270, 60, 30, 30));
++        rectangles.add(new Rectangle(330, 60, 30, 30));
++        rectangles.add(new Rectangle(30, 90, 30, 30));
++        rectangles.add(new Rectangle(90, 90, 30, 30));
++        rectangles.add(new Rectangle(150, 90, 30, 30));
++        rectangles.add(new Rectangle(210, 90, 30, 30));
++        rectangles.add(new Rectangle(270, 90, 30, 30));
++        rectangles.add(new Rectangle(330, 90, 30, 30));
++        rectangles.add(new Rectangle(180, 90, 30, 30));
++
++        rectangles.add(new Rectangle(30, 120, 30, 30));
++        rectangles.add(new Rectangle(90, 120, 30, 30));
++        rectangles.add(new Rectangle(270, 120, 30, 30));
++        rectangles.add(new Rectangle(330, 120, 30, 30));
++
++        rectangles.add(new Rectangle(150, 150, 30, 30));
++        rectangles.add(new Rectangle(210, 150, 30, 30));
++
++        rectangles.add(new Rectangle(0, 180, 30, 30));
++        rectangles.add(new Rectangle(60, 180, 30, 30));
++        rectangles.add(new Rectangle(90, 180, 30, 30));
++        rectangles.add(new Rectangle(270, 180, 30, 30));
++        rectangles.add(new Rectangle(300, 180, 30, 30));
++        rectangles.add(new Rectangle(360, 180, 30, 30));
++
++        rectangles.add(new Rectangle(150, 210, 30, 30));
++        rectangles.add(new Rectangle(180, 210, 30, 30));
++        rectangles.add(new Rectangle(210, 210, 30, 30));
++
++        rectangles.add(new Rectangle(150, 240, 30, 30));
++        rectangles.add(new Rectangle(210, 240, 30, 30));
++
++        rectangles.add(new Rectangle(30, 270, 30, 30));
++        rectangles.add(new Rectangle(90, 270, 30, 30));
++        rectangles.add(new Rectangle(150, 270, 30, 30));
++        rectangles.add(new Rectangle(210, 270, 30, 30));
++        rectangles.add(new Rectangle(270, 270, 30, 30));
++        rectangles.add(new Rectangle(330, 270, 30, 30));
++
++        rectangles.add(new Rectangle(30, 300, 30, 30));
++        rectangles.add(new Rectangle(90, 300, 30, 30));
++        rectangles.add(new Rectangle(270, 300, 30, 30));
++        rectangles.add(new Rectangle(330, 300, 30, 30));
++
++        rectangles.add(new Rectangle(30, 330, 30, 30));
++        rectangles.add(new Rectangle(90, 330, 30, 30));
++        rectangles.add(new Rectangle(150, 330, 30, 30));
++        rectangles.add(new Rectangle(210, 330, 30, 30));
++        rectangles.add(new Rectangle(270, 330, 30, 30));
++        rectangles.add(new Rectangle(330, 330, 30, 30));
++
++        rectangles.add(new Rectangle(210, 360, 30, 30));
++        rectangles.add(new Rectangle(150, 360, 30, 30));
+ 
+ 
+ 
+@@ -256,10 +354,10 @@
+                     player.setFill(new ImagePattern(dynamicImage));
+                     player.moveLeft();
+                     for (Rectangle rectangle : rectangles) {
+-                        if (player.getTranslateX() < rectangle.getTranslateX() + rectangle.getWidth() &&
+-                                player.getTranslateX() + player.getWidth() > rectangle.getTranslateX() &&
+-                                player.getTranslateY() < rectangle.getTranslateY() + rectangle.getHeight() &&
+-                                player.getTranslateY() + player.getHeight() > rectangle.getTranslateY()) {
++                        if (player.getTranslateX() < rectangle.getX() + rectangle.getWidth() &&
++                                player.getTranslateX() + player.getWidth() > rectangle.getX() &&
++                                player.getTranslateY() < rectangle.getY() + rectangle.getHeight() &&
++                                player.getTranslateY() + player.getHeight() > rectangle.getY()) {
+                             collision.set(true);
+                         }
+                     }
+@@ -294,10 +392,10 @@
+                     player.setFill(new ImagePattern(dynamicImage));
+                     player.moveRight();
+                     for (Rectangle rectangle : rectangles) {
+-                        if (player.getTranslateX() + player.getWidth() > rectangle.getTranslateX() &&
+-                                player.getTranslateX() < rectangle.getTranslateX() + rectangle.getWidth() &&
+-                                (player.getTranslateY() < rectangle.getTranslateY() + rectangle.getHeight() &&
+-                                        player.getTranslateY() + player.getHeight() > rectangle.getTranslateY())) {
++                        if (player.getTranslateX() + player.getWidth() > rectangle.getX() &&
++                                player.getTranslateX() < rectangle.getX() + rectangle.getWidth() &&
++                                (player.getTranslateY() < rectangle.getY() + rectangle.getHeight() &&
++                                        player.getTranslateY() + player.getHeight() > rectangle.getY())) {
+                             collision.set(true);
+                         }
+                     }
+@@ -330,10 +428,10 @@
+                     player.setFill(new ImagePattern(dynamicImage));
+                     player.moveUp();
+                     for (Rectangle rectangle : rectangles) {
+-                        if (player.getTranslateY() < rectangle.getTranslateY() + rectangle.getHeight() &&
+-                                player.getTranslateY() + player.getHeight() > rectangle.getTranslateY() &&
+-                                player.getTranslateX() < rectangle.getTranslateX() + rectangle.getWidth() &&
+-                                player.getTranslateX() + player.getWidth() > rectangle.getTranslateX()) {
++                        if (player.getTranslateY() < rectangle.getY() + rectangle.getHeight() &&
++                                player.getTranslateY() + player.getHeight() > rectangle.getY() &&
++                                player.getTranslateX() < rectangle.getX() + rectangle.getWidth() &&
++                                player.getTranslateX() + player.getWidth() > rectangle.getX()) {
+                             collision.set(true);
+                         }
+                     }
+@@ -367,10 +465,10 @@
+                     player.setFill(new ImagePattern(dynamicImage));
+                     player.moveDown();
+                     for (Rectangle rectangle : rectangles) {
+-                        if (player.getTranslateY() + player.getHeight() > rectangle.getTranslateY() &&
+-                                player.getTranslateY() < rectangle.getTranslateY() + rectangle.getHeight() &&
+-                                (player.getTranslateX() < rectangle.getTranslateX() + rectangle.getWidth() &&
+-                                        player.getTranslateX() + player.getWidth() > rectangle.getTranslateX())) {
++                        if (player.getTranslateY() + player.getHeight() > rectangle.getY() &&
++                                player.getTranslateY() < rectangle.getY() + rectangle.getHeight() &&
++                                (player.getTranslateX() < rectangle.getX() + rectangle.getWidth() &&
++                                        player.getTranslateX() + player.getWidth() > rectangle.getX())) {
+                             collision.set(true);
+                         }
+                     }
+@@ -462,43 +560,13 @@
+                     break;
+                 case ESCAPE:
+                     Main.client.gameIsFinished=true;
+-//                    packetFromClientToServer = MainPacket.create(4);
+-//                    try {
+-//                        outputStream.write(packetFromClientToServer.toByteArray());
+-//                        outputStream.flush();
+-//                    } catch (IOException ex) {
+-//                        throw new RuntimeException(ex);
+-//                    }
+                     stage.close();
+             }
+         });
++
+         stage.setScene(scene);
+-        stage.setTitle("Hello FXml!");
++        stage.setTitle("TANKS!");
+         stage.show();
+     }
+ 
+-    private byte[] extendArray(byte[] oldArray) {
+-        int oldSize = oldArray.length;
+-        byte[] newArray = new byte[oldSize * 2];
+-        System.arraycopy(oldArray, 0, newArray, 0, oldSize);
+-        return newArray;
+-    }
+-
+-    byte[] readInput(InputStream stream) throws IOException {
+-        int b;
+-        byte[] buffer = new byte[10];
+-        int counter = 0;
+-        while ((b = stream.read()) > -1) {
+-            buffer[counter++] = (byte) b;
+-            if (counter >= buffer.length) {
+-                buffer = extendArray(buffer);
+-            }
+-            if (counter > 2 && MainPacket.compareEOP(buffer, counter - 1)) {
+-                break;
+-            }
+-        }
+-        byte[] data = new byte[counter];
+-        System.arraycopy(buffer, 0, data, 0, counter);
+-        return data;
+-    }
+ }
