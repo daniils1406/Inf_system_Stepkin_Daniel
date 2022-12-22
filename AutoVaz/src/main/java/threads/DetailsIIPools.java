@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class DetailsIIPools extends Thread{
     ThreadPoolExecutor detailIPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-//    public static List<Integer> secondDetails=new LinkedList<>();
 
     SecondDetail secondDetail=new SecondDetail();
 

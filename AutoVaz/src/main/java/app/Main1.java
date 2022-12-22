@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.stream.Collectors;
 
 
 public class Main1 implements Initializable {
@@ -30,6 +29,13 @@ public class Main1 implements Initializable {
     public static final ThreadPoolExecutor paintPool=(ThreadPoolExecutor) Executors.newFixedThreadPool(1);
     public static final ThreadPoolExecutor dryPool=(ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
+    private Car car;
+
+    private PaintCar paintCar;
+
+    private InteriorAssembly interiorAssembly;
+
+    public DryCar dryCar;
 
     @FXML
     public VBox dryVBox;
@@ -60,18 +66,12 @@ public class Main1 implements Initializable {
 
     public List<ProgressBar> progressBarListForWorkers= new LinkedList<>();
 
+
+//    public List<ProgressBar> progressBarListForWorkers= new LinkedList<>();
+
     @FXML
     public ProgressBar progressBar8;
 
-
-
-    private Car car;
-
-    private PaintCar paintCar;
-
-    private InteriorAssembly interiorAssembly;
-
-    public DryCar dryCar;
 
 
     public Main1(){
@@ -83,12 +83,8 @@ public class Main1 implements Initializable {
         this.dryCar=new DryCar(this);
     }
 
-    public ProgressBar getProgressBar1() {
-        return progressBar1;
-    }
 
     public Task createDetail1() {
-
         return FirstDetail.createDetail();
     }
     public Task createDetail2() {
@@ -184,8 +180,6 @@ public class Main1 implements Initializable {
         }
         ProgressBar progressBar=new ProgressBar();
         dryVBox.getChildren().add(progressBar);
-        System.out.println("добрались");
-        System.out.println(dryVBox.getChildren().size());
         dryVBox.setAlignment(Pos.CENTER);
         Task task = dryCar();
         progressBar.progressProperty().bind(task.progressProperty());

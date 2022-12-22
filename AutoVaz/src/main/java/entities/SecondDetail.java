@@ -10,8 +10,6 @@ import java.util.List;
 import static entities.FirstDetail.firstDetails;
 import static entities.ThirdDetail.thirdDetails;
 
-//import static threads.DetailsIIPools.secondDetails;
-//import static threads.DetailsIPools.firstDetails;
 
 public class SecondDetail extends Thread{
 
@@ -40,7 +38,6 @@ public class SecondDetail extends Thread{
                 return true;
             }
         };
-//        System.out.println(secondDetails+"II");
         return task;
 
     }

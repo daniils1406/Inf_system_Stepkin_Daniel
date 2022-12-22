@@ -28,14 +28,6 @@ public class PaintCar implements Runnable{
                     throw new RuntimeException(e);
                 }
             }
-//            while(assembledCar.isEmpty()){
-//                try {
-//                    sleep(300);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            assembledCar.remove(0);
 
             while(assembledCar.size()!=0){
                 assembledCar.remove(0);
@@ -63,16 +55,12 @@ public class PaintCar implements Runnable{
                 }
                 updateProgress(10,10);
                 paintedCars.add(value++);
-                System.out.println("Я работаю только до создания нового поток?");
                 synchronized (Main1.dryPool){
                     Main1.dryPool.execute(controller.dryCar);
                 }
-//                controller.dryCar.start();
-                System.out.println(paintedCars+" дошло автомобилей");
                 return true;
             }
         };
-//        System.out.println(controller.progressBar4.getProgress());
         return task;
     }
 }

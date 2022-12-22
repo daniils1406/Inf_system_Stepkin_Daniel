@@ -29,7 +29,6 @@ import java.util.List;
 import static entities.SecondDetail.secondDetails;
 import static entities.ThirdDetail.thirdDetails;
 
-//import static threads.DetailsIPools.firstDetails;
 
 public class FirstDetail extends Thread{
     public static List<Integer> firstDetails=new LinkedList<>();

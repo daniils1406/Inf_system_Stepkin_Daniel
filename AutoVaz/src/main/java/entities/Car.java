@@ -29,13 +29,6 @@ public class Car implements Runnable{
     public static List<Integer> cars=new LinkedList<>();
     public void run(){
         while (true){
-//            while(secondDetails.size()==0 || thirdDetails.size()==0 || firstDetails.size()==0){
-//                try {
-//                    sleep(300);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
 
             try {
                 synchronized (carPool){

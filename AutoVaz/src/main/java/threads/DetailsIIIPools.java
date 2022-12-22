@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class DetailsIIIPools extends Thread{
     ThreadPoolExecutor detailIPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-//    public static List<Integer> thirdDetails=new LinkedList<>();
 
     ThirdDetail thirdDetail=new ThirdDetail();
 

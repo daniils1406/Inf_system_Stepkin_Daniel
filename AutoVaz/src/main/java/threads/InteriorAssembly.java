@@ -35,8 +35,6 @@ public class InteriorAssembly {
             while (true) {
                 synchronized (toolsPool) {
                     try {
-                        System.out.println("Инструмент ждет");
-//                        System.out.println(Car.cars.toString());
                         toolsPool.wait();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -44,7 +42,6 @@ public class InteriorAssembly {
                 }
                 while (Car.cars.size() != 0) {
                         buildIsComplete = false;
-//                            System.out.println("собираем автомобиль");
                         if(Car.cars.size()!=0){
                             Car.cars.remove(0);
                         }
@@ -154,8 +151,7 @@ public class InteriorAssembly {
             return task;
         }
     }
-
-    int numberOfWorkers = 7;
+    static int numberOfWorkers = 7;
     final ThreadPoolExecutor workersPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(numberOfWorkers);
     Worker worker = new Worker(workersPool);
     Main1 main1;
